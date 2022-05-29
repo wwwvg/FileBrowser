@@ -15,25 +15,28 @@ namespace MainModule.ViewModels
     public class FileViewModel : BindableBase
     {
         #region СВОЙСТВА
-        private ObservableCollection<FileInformation> _files = new();
-        public ObservableCollection<FileInformation> Files
+
+        private FileInfoModel _selectedFile;                // выбранный файл или каталог            FullPath | Name | Type | Size | TimeCreated
+        public FileInfoModel SelectedFile
         {
-            get { return _files; }
-            set { SetProperty(ref _files, value); }
+            get => _selectedFile;
+            set => SetProperty(ref _selectedFile, value);
         }
 
-        private DriveModel _selectedDrive; // выбранный диск
+        private ObservableCollection<FileInfoModel> _files = new();
+        public ObservableCollection<FileInfoModel> Files  // Файлы и каталоги         
+        {
+            get => _files;
+            set => SetProperty(ref _files, value);
+        }
+               
+       
+
+        private DriveModel _selectedDrive;                  // выбранный диск           Name | Icon(ImageSource) | FreeSpace
         public DriveModel SelectedDrive
         {
             get => _selectedDrive;
             set => SetProperty(ref _selectedDrive, value);
-        }
-
-        private FileInformation _selectedFile;
-        public FileInformation SelectedFile
-        {
-            get { return _selectedFile; }
-            set { SetProperty(ref _selectedFile, value); }
         }
 
         private List<DriveModel> _drives; // все диски
@@ -82,13 +85,13 @@ namespace MainModule.ViewModels
                 DirectoryInfo[] directories = dir.GetDirectories();
                 foreach (var item in directories)
                 {
-                    Files.Add(new FileInformation { FullPath = item.FullName, Name = $"[{item.Name}]", Size = "<Папка>", TimeCreated = item.LastWriteTime.ToString("dd/MM/yyyy  hh:mm") });
+                    Files.Add(new FileInfoModel { FullPath = item.FullName, Name = $"[{item.Name}]", Size = "<Папка>", TimeCreated = item.LastWriteTime.ToString("dd/MM/yyyy  hh:mm") });
                 }
 
                 FileInfo[] files = dir.GetFiles();
                 foreach (var item in files)
                 {
-                    Files.Add(new FileInformation { FullPath = item.FullName, Name = item.Name, Size = Bytes.SizeSuffix(item.Length), TimeCreated = item.LastWriteTime.ToString("dd/MM/yyyy  hh:mm") });
+                    Files.Add(new FileInfoModel { FullPath = item.FullName, Name = item.Name, Size = Bytes.SizeSuffix(item.Length), TimeCreated = item.LastWriteTime.ToString("dd/MM/yyyy  hh:mm") });
                 }
 
             }
@@ -133,9 +136,9 @@ namespace MainModule.ViewModels
                     FreeSpace = $"  [{drive.VolumeLabel}]  {Bytes.SizeSuffix(drive.TotalFreeSpace)} из {Bytes.SizeSuffix(drive.TotalSize)}"
                 });              
             }
-            SelectedDrive = _drives[0];
-            FreeSpace = $"  [{drives[0].VolumeLabel}]  {Bytes.SizeSuffix(drives[0].TotalFreeSpace)} из {Bytes.SizeSuffix(drives[0].TotalSize)}";
-            SetRootFoldersAndFiles();
+            SelectedDrive = _drives[0]; // выбираем диск C:\
+            FreeSpace = $"  [{drives[0].VolumeLabel}]  {Bytes.SizeSuffix(drives[0].TotalFreeSpace)} из {Bytes.SizeSuffix(drives[0].TotalSize)}"; // справа отображаем доступный объем памяти
+            SetRootFoldersAndFiles(); // список заполняем папками и файлами 
         }
 #endregion
 

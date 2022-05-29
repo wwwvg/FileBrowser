@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MainModule.Models
 {
-    public class FileInformation
+    public class FileInfoModel
     {
         public string FullPath { get; set; }
         public string Name { get; set; }
