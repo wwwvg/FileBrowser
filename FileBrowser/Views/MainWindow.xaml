@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
-        Title="{Binding Title}" Height="768" Width="1024" >
+        Title="{Binding Title}" Icon="/Icons/Browser.png" Height="768" Width="1024" >
 
     <DockPanel>
         <ContentControl DockPanel.Dock="Top" prism:RegionManager.RegionName="ToolBarRegion" />

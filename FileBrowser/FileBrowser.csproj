@@ -5,9 +5,15 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Icons\Browser.png" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MainModule\MainModule.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Browser.png" />
   </ItemGroup>
 </Project>

@@ -64,6 +64,7 @@ namespace MainModule.ViewModels
         {
             SetVolumeLabelInfo(selectedDrive);
             SetRootFoldersAndFiles();
+            _eventAggregator.GetEvent<ListViewSelectionChanged>().Publish("");
         }
 
         void SetVolumeLabelInfo(DriveModel selectedDrive)

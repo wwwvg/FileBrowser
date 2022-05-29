@@ -1,4 +1,7 @@
 ﻿using Prism.Mvvm;
+using System;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace FileBrowser.ViewModels
 {
@@ -11,9 +14,16 @@ namespace FileBrowser.ViewModels
             set { SetProperty(ref _title, value); }
         }
 
+        //private ImageSource _icon;
+        //public ImageSource Icon
+        //{
+        //    get { return _icon; }
+        //    set { SetProperty(ref _icon, value); }
+        //}
+
         public MainWindowViewModel()
         {
-
+            //Icon = new BitmapImage(new Uri("/FileBrowser;component/Icons/Browser.png", UriKind.Relative));
         }
     }
 }
