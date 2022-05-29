@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace MainModule.Models
 {
+    /// <summary>
+    /// Модель для списка файлов/папок: информация о выбранном файле/папки
+    /// </summary>
     public class FileInfoModel
     {
         public string FullPath { get; set; }

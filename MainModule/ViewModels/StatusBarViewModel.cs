@@ -18,7 +18,7 @@ namespace MainModule.ViewModels
         }
         public StatusBarViewModel(IEventAggregator eventAggregator)
         {
-            eventAggregator.GetEvent<ListViewSelectionChanged>().Subscribe(SetStatusBarText);
+            eventAggregator.GetEvent<ListViewSelectionChanged>().Subscribe(SetStatusBarText);  // диск или файл/каталог изменился -> пришло от << FileViewModel >>
         }
 
         void SetStatusBarText(string text)

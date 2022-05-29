@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace MainModule.Helpers
 {
+    /// <summary>
+    /// Конвертирует байты в килобайты, мегабайты, гигабайты ...
+    /// </summary>
     public static class Bytes
     {
         public static string SizeSuffix(Int64 value, int decimalPlaces = 1)

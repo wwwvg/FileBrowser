@@ -10,8 +10,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+        
         <!--ВЫБОР ДИСКА-->
-
         <StackPanel Orientation="Horizontal">
             <ComboBox Name="CmbDrives" ItemsSource="{Binding Drives}" Width="70"
                           SelectedValue="{Binding SelectedDrive, Mode=TwoWay}">
@@ -54,7 +54,6 @@
                                                CommandParameter="{Binding SelectedFile}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-            
         </ListView>
         
     </Grid>
