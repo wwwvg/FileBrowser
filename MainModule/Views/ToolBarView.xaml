@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="MainModule.Views.ToolBarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"             
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <Grid>
+        <ToolBar>
+            <Button Name="ButtonNewFolder" Width="25" Height="25" Margin="5, 0, 0, 0" ToolTip="Добавит каталог">
+                <Image Source="{Binding AddFolderImage}" />
+            </Button>
+            <Button Name="ButtonDeleteItem"  Width="25" Height="25" Margin="10, 0, 0, 0" ToolTip="Удалить выбранный элемент">
+                <Image Source="{Binding DeleteItemImage}"/>
+            </Button>
+        </ToolBar>
+    </Grid>
+</UserControl>

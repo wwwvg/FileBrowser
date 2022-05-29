@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Icons\AddFolder.png" />
+    <None Remove="Icons\DeleteItem.png" />
+    <None Remove="Icons\HardDrive.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Prism.Wpf" Version="8.1.97" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Icons\AddFolder.png" />
+    <Resource Include="Icons\DeleteItem.png" />
+    <Resource Include="Icons\HardDrive.png" />
+  </ItemGroup>
+
+</Project>
