@@ -7,14 +7,14 @@
     <Grid>
         <!--ВЫБОР ДИСКА-->
         <StackPanel Orientation="Horizontal">
-            <ComboBox Name="CmbDrives" ItemsSource="{Binding Drives}" Width="80"
+            <ComboBox Name="CmbDrives" ItemsSource="{Binding Drives}" Width="80" Margin="5 0 0 0"
                                         SelectedValue="{Binding SelectedDrive, Mode=TwoWay}">
                 <ComboBox.ItemTemplate>
                     <ItemContainerTemplate>
-                        <WrapPanel>
-                            <Image Source="{Binding Icon}"  Height="20" ></Image>
-                            <TextBlock  Text="{Binding Name}" Height="20" Margin="10 6 0 0"></TextBlock>
-                        </WrapPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{Binding Icon}"  Height="20" VerticalAlignment="Center"></Image>
+                            <TextBlock  Text="{Binding Name}" Height="20" Margin="10 0 0 0" VerticalAlignment="Center"></TextBlock>
+                        </StackPanel>
                     </ItemContainerTemplate>
                 </ComboBox.ItemTemplate>
 
@@ -25,9 +25,7 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ComboBox>
-
             <TextBlock Text="{Binding FreeSpace}" VerticalAlignment="Center"></TextBlock>
-
         </StackPanel>
     </Grid>
 </UserControl>

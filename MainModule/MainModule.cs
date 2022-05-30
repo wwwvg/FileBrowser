@@ -3,6 +3,7 @@ using Prism.Modularity;
 using Prism.Regions;
 using System;
 using MainModule.Views;
+using MainModule.Views.Content;
 
 namespace MainModule
 {
@@ -21,6 +22,7 @@ namespace MainModule
             _regionManager.RegisterViewWithRegion("FileListRegion", typeof(FileView)); 
             _regionManager.RegisterViewWithRegion("StatusBarRegion", typeof(StatusBarView));
             _regionManager.RegisterViewWithRegion("DriveRegion", typeof(DriveView));
+            _regionManager.RegisterViewWithRegion("ContentRegion", typeof(ImageView)); 
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)

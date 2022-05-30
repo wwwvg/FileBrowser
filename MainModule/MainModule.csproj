@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="Icons\AddFolder.png" />
+    <None Remove="Icons\Back.png" />
     <None Remove="Icons\Bin.png" />
     <None Remove="Icons\Cfg.png" />
     <None Remove="Icons\DeleteItem.png" />
@@ -23,6 +24,7 @@
 
   <ItemGroup>
     <Resource Include="Icons\AddFolder.png" />
+    <Resource Include="Icons\Back.png" />
     <Resource Include="Icons\Bin.png" />
     <Resource Include="Icons\Cfg.png" />
     <Resource Include="Icons\DeleteItem.png" />
@@ -30,6 +32,11 @@
     <Resource Include="Icons\HardDrive.png" />
     <Resource Include="Icons\Image.png" />
     <Resource Include="Icons\Text.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModels\Content\" />
+    <Folder Include="Views\Content\" />
   </ItemGroup>
 
 </Project>

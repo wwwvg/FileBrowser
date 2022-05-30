@@ -10,6 +10,8 @@ using System.IO;
 using System.Windows.Media.Imaging;
 using FileBrowser.Events;
 using MainModule.Events;
+using System.Windows.Media;
+using System.Windows.Input;
 
 namespace MainModule.ViewModels
 {
@@ -20,7 +22,7 @@ namespace MainModule.ViewModels
         /// </summary>
 #region СВОЙСТВА
 
-        private FileInfoModel _selectedFile;                // выбранный файл или каталог            FullPath | Name | Type | Size | TimeCreated
+        private FileInfoModel _selectedFile;    // выбранный файл или каталог            Icon(ImageSource) | Type(enum) | FullPath | Name | Type | Size | TimeCreated
         public FileInfoModel SelectedFile
         {
             get => _selectedFile;
@@ -32,6 +34,13 @@ namespace MainModule.ViewModels
         {
             get => _files;
             set => SetProperty(ref _files, value);
+        }
+
+        private KeyEventArgs _args;
+        public KeyEventArgs Args
+        {
+            get { return _args; }
+            set { SetProperty(ref _args, value); }
         }
 
         IEventAggregator _eventAggregator;                  // IEventAggregator - предназначен для отправки сообщений
@@ -50,43 +59,80 @@ namespace MainModule.ViewModels
             if(SelectedFile != null) // посылаем событие изменения выбора файла или каталога -> подписчик ->  << StatusBarViewModel >>
                 _eventAggregator.GetEvent<ListViewSelectionChanged>().Publish($"Путь: {SelectedFile.FullPath}         Размер: {SelectedFile.Size}         Дата и время изменения: {SelectedFile.TimeCreated}");
         }
+        #endregion
+
+    #region ДВОЙНОЙ ЩЕЛЧОК
+
+        private DelegateCommand _doubleClicked;
+        public DelegateCommand DoubleClicked =>
+            _doubleClicked ?? (_doubleClicked = new DelegateCommand(ExecuteDoubleClicked));
+
+        void ExecuteDoubleClicked()
+        {
+            if (SelectedFile == null)
+                return;
+
+            if (SelectedFile.Type == FileType.Folder)
+                SetFoldersAndFiles(SelectedFile.FullPath);
+            else if (SelectedFile.Type == FileType.Back)
+            {
+                SetFoldersAndFiles(SelectedFile.FullPath);
+            }
+        }
     #endregion
 
 #endregion
 
-#region КОНСТРУКТОР
-
-        public FileViewModel(IEventAggregator eventAggregator)                              
-        {
-            _eventAggregator = eventAggregator;
-            _eventAggregator.GetEvent<DriveChanged>().Subscribe(SetRootFoldersAndFiles);  // диск или файл/каталог изменился -> пришло от << DriveViewModel >>
-        }
-#endregion
-
-        void SetRootFoldersAndFiles(DriveModel driveModel) // добавление папок и файлов
+        void SetFoldersAndFiles(string path) // добавление папок и файлов
         {
             Files.Clear();
+            DirectoryInfo dir = new DirectoryInfo($"{path}");
             try
-            {
-                DirectoryInfo dir = new DirectoryInfo($"{driveModel.Name}");
+            { 
                 DirectoryInfo[] directories = dir.GetDirectories();
+                if (dir.Parent != null)
+                    Files.Add(new FileInfoModel { Icon = IconForFile.GetIconForFile(FileType.Back), Type = FileType.Back, Name = "[..]", FullPath = dir.Parent.FullName });
+
                 foreach (var item in directories)
                 {
-                    Files.Add(new FileInfoModel { FullPath = item.FullName, Name = $"[{item.Name}]", Size = "<Папка>", TimeCreated = item.LastWriteTime.ToString("dd/MM/yyyy  hh:mm") });
+                    if (item.Attributes == FileAttributes.Hidden || item.Attributes == FileAttributes.System)
+                        continue;
+                    Files.Add(new FileInfoModel { Icon = IconForFile.GetIconForFile(FileType.Folder), Type = FileType.Folder, FullPath = item.FullName, Name = $"[{item.Name}]", Size = "<Папка>", TimeCreated = item.LastWriteTime.ToString("dd/MM/yyyy  hh:mm") });
                 }
 
                 FileInfo[] files = dir.GetFiles();
                 foreach (var item in files)
                 {
-                    Files.Add(new FileInfoModel { FullPath = item.FullName, Name = item.Name, Size = Bytes.SizeSuffix(item.Length), TimeCreated = item.LastWriteTime.ToString("dd/MM/yyyy  hh:mm") });
+                    FileType type;
+                    if(item.Name.Contains(".png") || item.Name.Contains(".bmp") || item.Name.Contains(".jpg") || item.Name.Contains(".gif"))
+                        type = FileType.Image;
+                    else if(item.Name.Contains(".txt") || item.Name.Contains(".cfg") || item.Name.Contains(".ini") || item.Name.Contains(".log"))
+                        type = FileType.Text;
+                    else
+                        type = FileType.Bin;
+
+                    ImageSource imageSource = IconForFile.GetIconForFile(type);
+
+                    Files.Add(new FileInfoModel { Icon = imageSource, Type = type, FullPath = item.FullName, Name = item.Name, Size = Bytes.SizeSuffix(item.Length), TimeCreated = item.LastWriteTime.ToString("dd/MM/yyyy  hh:mm") });
                 }
 
             }
-            catch (UnauthorizedAccessException)
+            catch (UnauthorizedAccessException) // некотрые системные папки недоступны, но если запустить программу с админскими привилегиями то все ОК.
             {
-                // Code here will be hit if access is denied. You can also
-                // leave this empty to ignore the error.
+                Files.Add(new FileInfoModel { Icon = IconForFile.GetIconForFile(FileType.Back), Type = FileType.Back, Name = "[..]", FullPath = dir.Parent.FullName });
             }
+
+            if(Files.Count != 0)
+                SelectedFile = Files[0];
         }
+
+
+        #region КОНСТРУКТОР
+        public FileViewModel(IEventAggregator eventAggregator)
+        {
+            _eventAggregator = eventAggregator;
+            _eventAggregator.GetEvent<DriveChanged>().Subscribe(SetFoldersAndFiles);  // диск или файл/каталог изменился -> пришло от << DriveViewModel >>
+        }
+        #endregion
     }
 }

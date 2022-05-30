@@ -6,16 +6,24 @@
              prism:ViewModelLocator.AutoWireViewModel="True">
     
     <Grid>
-
-        
-        
         <!--ОТОБРАЖЕНИЕ КАТАЛОГОВ И ФАЙЛОВ-->
+        <Grid.InputBindings>
+            <KeyBinding Gesture="Enter" Command="{Binding DoubleClicked}" />
+        </Grid.InputBindings>
         <ListView ItemsSource="{Binding Files}" Grid.Column="0" Margin="5"
                   SelectedItem="{Binding SelectedFile}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding Name}"/>
-                    <GridViewColumn Header="Тип" DisplayMemberBinding="{Binding Type}"/>
+                    <GridViewColumn Header="Имя">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Source="{Binding Path=Icon}" MaxHeight="15"></Image>
+                                    <TextBlock Text="{Binding Name}" Margin="5,0,0,0"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                     <GridViewColumn Header="Размер" DisplayMemberBinding="{Binding Size}"/>
                     <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding TimeCreated}"/>
                 </GridView>
@@ -24,6 +32,10 @@
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <prism:InvokeCommandAction Command="{Binding SelectedCommandListView}"
+                                               CommandParameter="{Binding SelectedFile}" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <prism:InvokeCommandAction Command="{Binding DoubleClicked}"
                                                CommandParameter="{Binding SelectedFile}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>

@@ -45,7 +45,7 @@ namespace MainModule.ViewModels
         {
             SelectedDrive = selectedDrive;
             SetVolumeLabelInfo(selectedDrive);
-            _eventAggregator.GetEvent<DriveChanged>().Publish(selectedDrive);  // посылаем событие смены диска -> подписчик ->  << FileViewModel >>
+            _eventAggregator.GetEvent<DriveChanged>().Publish(selectedDrive.Name);  // посылаем событие смены диска -> подписчик ->  << FileViewModel >>
         }
 
         void SetVolumeLabelInfo(DriveModel selectedDrive)
@@ -54,7 +54,7 @@ namespace MainModule.ViewModels
         }
 #endregion
 
-        IEventAggregator _eventAggregator;                  // IEventAggregator - предназначен для отправки сообщений
+        IEventAggregator _eventAggregator;                  
         public DriveViewModel(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
@@ -75,6 +75,7 @@ namespace MainModule.ViewModels
             }
             DriveSelected(_drives[0]); // выбираем диск C:\
             FreeSpace = $"  [{drives[0].VolumeLabel}]  {Bytes.SizeSuffix(drives[0].TotalFreeSpace)} из {Bytes.SizeSuffix(drives[0].TotalSize)} свободно"; // справа отображаем доступный объем памяти
+            //_eventAggregator.GetEvent<DriveChanged>().Publish(_drives[0].Name);  // посылаем событие смены диска -> подписчик ->  << FileViewModel >>
         }
     }
 }

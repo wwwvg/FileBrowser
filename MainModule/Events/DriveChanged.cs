@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MainModule.Events
 {
-    internal class DriveChanged : PubSubEvent<DriveModel>
+    internal class DriveChanged : PubSubEvent<string>
     {
 
     }
