@@ -23,7 +23,7 @@
                 <ContentControl prism:RegionManager.RegionName="FileListRegion" Grid.Row="1"/>
             </Grid>
             <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
-            <ContentControl prism:RegionManager.RegionName="ContentRegion" Grid.Column="2"/>
+            <ContentControl Grid.Column="2" prism:RegionManager.RegionName="ContentRegion"/>
         </Grid>
         
     </DockPanel>
