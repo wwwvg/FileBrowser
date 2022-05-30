@@ -6,39 +6,12 @@
              prism:ViewModelLocator.AutoWireViewModel="True">
     
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+
         
-        <!--ВЫБОР ДИСКА-->
-        <StackPanel Orientation="Horizontal">
-            <ComboBox Name="CmbDrives" ItemsSource="{Binding Drives}" Width="70"
-                          SelectedValue="{Binding SelectedDrive, Mode=TwoWay}">
-                <ComboBox.ItemTemplate>
-                    <ItemContainerTemplate>
-                        <WrapPanel>
-                            <Image Source="{Binding Icon}"  Height="20" ></Image>
-                            <TextBlock  Text="{Binding Name}" Height="20" Margin="10 6 0 0"></TextBlock>
-                        </WrapPanel>
-                    </ItemContainerTemplate>
-                </ComboBox.ItemTemplate>
-                
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <prism:InvokeCommandAction Command="{Binding SelectedCommandComboBox}"
-                                               CommandParameter="{Binding SelectedDrive}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </ComboBox>
-
-            <TextBlock Text="{Binding FreeSpace}" VerticalAlignment="Center"></TextBlock>
-            
-        </StackPanel>
-
+        
         <!--ОТОБРАЖЕНИЕ КАТАЛОГОВ И ФАЙЛОВ-->
-        <ListView ItemsSource="{Binding Files}" Grid.Column="0" Margin="5" Grid.Row="1"
-                  SelectedItem="{Binding SelectedFile, Mode=TwoWay}">
+        <ListView ItemsSource="{Binding Files}" Grid.Column="0" Margin="5"
+                  SelectedItem="{Binding SelectedFile}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Имя" DisplayMemberBinding="{Binding Name}"/>

@@ -11,8 +11,8 @@ namespace MainModule.ViewModels
         public ImageSource AddFolderImage { get; set; }
         public ToolBarViewModel()
         {
-            DeleteItemImage = new BitmapImage(new Uri("/MainModule;component/Icons/DeleteItem.png", UriKind.Relative));
-            AddFolderImage = new BitmapImage(new Uri("/MainModule;component/Icons/AddFolder.png", UriKind.Relative));
+            DeleteItemImage = new BitmapImage(new Uri("..\\Icons\\DeleteItem.png", UriKind.Relative));
+            AddFolderImage = new BitmapImage(new Uri("..\\Icons\\AddFolder.png", UriKind.Relative));
         }
     }
 }

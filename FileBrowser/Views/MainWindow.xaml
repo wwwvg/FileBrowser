@@ -14,7 +14,14 @@
                 <ColumnDefinition Width="3"></ColumnDefinition>
                 <ColumnDefinition Width="auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <ContentControl prism:RegionManager.RegionName="FileListRegion" Grid.Column="0"/>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <ContentControl prism:RegionManager.RegionName="DriveRegion" Grid.Row="0"/>
+                <ContentControl prism:RegionManager.RegionName="FileListRegion" Grid.Row="1"/>
+            </Grid>
             <GridSplitter Grid.Column="1" ShowsPreview="False" Width="3" HorizontalAlignment="Center" VerticalAlignment="Stretch" />
             <ContentControl prism:RegionManager.RegionName="ContentRegion" Grid.Column="2"/>
         </Grid>

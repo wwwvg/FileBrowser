@@ -20,11 +20,12 @@ namespace MainModule
             _regionManager.RegisterViewWithRegion("ToolBarRegion", typeof(ToolBarView));
             _regionManager.RegisterViewWithRegion("FileListRegion", typeof(FileView)); 
             _regionManager.RegisterViewWithRegion("StatusBarRegion", typeof(StatusBarView));
+            _regionManager.RegisterViewWithRegion("DriveRegion", typeof(DriveView));
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            
+            containerRegistry.RegisterForNavigation<FileView>();
         }
     }
 }

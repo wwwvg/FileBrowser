@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="MainModule.Views.DriveView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"     
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    <Grid>
+        <!--ВЫБОР ДИСКА-->
+        <StackPanel Orientation="Horizontal">
+            <ComboBox Name="CmbDrives" ItemsSource="{Binding Drives}" Width="80"
+                                        SelectedValue="{Binding SelectedDrive, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                    <ItemContainerTemplate>
+                        <WrapPanel>
+                            <Image Source="{Binding Icon}"  Height="20" ></Image>
+                            <TextBlock  Text="{Binding Name}" Height="20" Margin="10 6 0 0"></TextBlock>
+                        </WrapPanel>
+                    </ItemContainerTemplate>
+                </ComboBox.ItemTemplate>
+
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <prism:InvokeCommandAction Command="{Binding SelectedDriveCommand}"
+                                               CommandParameter="{Binding SelectedDrive}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+
+            <TextBlock Text="{Binding FreeSpace}" VerticalAlignment="Center"></TextBlock>
+
+        </StackPanel>
+    </Grid>
+</UserControl>
