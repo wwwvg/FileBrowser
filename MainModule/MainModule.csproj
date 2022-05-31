@@ -35,8 +35,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\Content\" />
-    <Folder Include="Views\Content\" />
+    <Folder Include="ViewModels\Dialogs\" />
+    <Folder Include="Views\Dialogs\" />
   </ItemGroup>
 
 </Project>

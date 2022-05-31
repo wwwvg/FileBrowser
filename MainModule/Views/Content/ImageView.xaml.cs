@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace MainModule.Views
+namespace MainModule.Views.Content
 {
     /// <summary>
     /// Interaction logic for ImageView

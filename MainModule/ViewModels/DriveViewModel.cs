@@ -35,7 +35,7 @@ namespace MainModule.ViewModels
             set => SetProperty(ref _freeSpace, value);
         }
 
-#region ВЫБОР ЛОГИЧЕСКОГО ДИСКА
+        #region КОМАНДА ВЫБОРА ЛОГИЧЕСКОГО ДИСКА
 
         private DelegateCommand<DriveModel> _selectedDriveCommand;     // DriveModel - передаваемый параметр, содержит картинку, имя диска, количество свободной памяти
         public DelegateCommand<DriveModel> SelectedDriveCommand =>
@@ -52,37 +52,39 @@ namespace MainModule.ViewModels
         {
             FreeSpace = $"{selectedDrive.FreeSpace}"; //информация о названии диска и свободной памяти
         }
-#endregion
+        #endregion
 
-        IEventAggregator _eventAggregator;                  
+        IEventAggregator _eventAggregator;
         public DriveViewModel(IEventAggregator eventAggregator)
         {
-            _eventAggregator = eventAggregator;
-            DriveInfo[] drives = DriveInfo.GetDrives(); //получаем список дисков
-            if (drives.Length == 0)
-                return;
-
-            _drives = new List<DriveModel>();
-
-            foreach (var drive in drives) //добавляем их в ComboBox
+            try
             {
-                try
+                _eventAggregator = eventAggregator;
+                DriveInfo[] drives = DriveInfo.GetDrives(); //получаем список дисков
+                if (drives.Length == 0)
+                    return;
+
+                _drives = new List<DriveModel>();
+
+                foreach (var drive in drives) //добавляем их в ComboBox
                 {
-                    _drives.Add(new DriveModel() 
+
+                    _drives.Add(new DriveModel()
                     {
                         Name = $"{drive.Name} ",
                         Icon = new BitmapImage(new Uri("..\\Icons\\HardDrive.png", UriKind.Relative)),
                         FreeSpace = $"  [{drive.VolumeLabel}]  {Bytes.SizeSuffix(drive.TotalFreeSpace)} из {Bytes.SizeSuffix(drive.TotalSize)}  свободно"
                     });
                 }
-                catch(Exception ex) // не все диски м.б. доступны (например - сетевой)
-                {
-
-                }
+                
+        
+                DriveSelected(_drives[0]); // выбираем диск C:\
+                FreeSpace = $"  [{drives[0].VolumeLabel}]  {Bytes.SizeSuffix(drives[0].TotalFreeSpace)} из {Bytes.SizeSuffix(drives[0].TotalSize)} свободно"; // справа отображаем доступный объем памяти
             }
-            DriveSelected(_drives[0]); // выбираем диск C:\
-            FreeSpace = $"  [{drives[0].VolumeLabel}]  {Bytes.SizeSuffix(drives[0].TotalFreeSpace)} из {Bytes.SizeSuffix(drives[0].TotalSize)} свободно"; // справа отображаем доступный объем памяти
-            //_eventAggregator.GetEvent<DriveChanged>().Publish(_drives[0].Name);  // посылаем событие смены диска -> подписчик ->  << FileViewModel >>
+            catch (Exception ex) // не все диски м.б. доступны (например - сетевой)
+            {
+
+            }
         }
     }
 }

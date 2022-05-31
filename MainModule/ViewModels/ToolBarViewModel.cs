@@ -4,6 +4,7 @@ using Prism.Commands;
 using Prism.Events;
 using Prism.Ioc;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
 using System;
 using System.IO;
 using System.Windows.Media;
@@ -17,6 +18,16 @@ namespace MainModule.ViewModels
         /// FileViewModel посылает сообщение об изменении выбранного файла/каталога. Проверяется их путь и на основании этого определяется доступность кнопок.
         /// </summary>
         #region СВОЙСТВА
+
+        private readonly IDialogService _dialogService;
+
+        private string _messageReceived;
+        public string MessageReceived
+        {
+            get { return _messageReceived; }
+            set { SetProperty(ref _messageReceived, value); }
+        }
+
         private bool _canAddFolder; // доступность кнопки Добавить папку
         public bool CanAddFolder
         {
@@ -42,7 +53,7 @@ namespace MainModule.ViewModels
 
         void ExecuteAddFolder()
         {
-
+            ShowDialog();
         }
 
         bool CanExecuteAddFolder()
@@ -88,7 +99,7 @@ namespace MainModule.ViewModels
         }
         #endregion
         #endregion
-        public ToolBarViewModel(IEventAggregator eventAggregator)
+        public ToolBarViewModel(IEventAggregator eventAggregator, IDialogService dialogService)
         {
             _canDeleteItem = false;
             _canAddFolder = false;
@@ -96,6 +107,21 @@ namespace MainModule.ViewModels
             AddFolderImage = new BitmapImage(new Uri("..\\Icons\\AddFolder.png", UriKind.Relative));
             eventAggregator.GetEvent<ListViewSelectionChanged>().Subscribe(ChangeCanExecuteAddFolder);  // диск или файл/каталог изменился -> пришло от << FileViewModel >>
             eventAggregator.GetEvent<ListViewSelectionChanged>().Subscribe(ChangeCanExecuteDeleteItem);  // диск или файл/каталог изменился -> пришло от << FileViewModel >>
+            _dialogService = dialogService;
+        }
+        private void ShowDialog()
+        {
+            _dialogService.ShowMessageDialog("Hello from ViewAViewModel", r =>
+            {
+                if (r.Result == ButtonResult.OK)
+                {
+                    MessageReceived = r.Parameters.GetValue<string>("myParam");
+                }
+                else
+                {
+                    MessageReceived = "Not closed by user";
+                }
+            });
         }
     }
 }

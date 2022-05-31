@@ -5,6 +5,7 @@ using System;
 using MainModule.Views;
 using MainModule.Services;
 using MainModule.ViewModels;
+using MainModule.Views.Content;
 
 namespace MainModule
 {
@@ -23,12 +24,16 @@ namespace MainModule
             _regionManager.RegisterViewWithRegion("FileListRegion", typeof(FileView)); 
             _regionManager.RegisterViewWithRegion("StatusBarRegion", typeof(StatusBarView));
             _regionManager.RegisterViewWithRegion("DriveRegion", typeof(DriveView));
-            _regionManager.RegisterViewWithRegion("ContentRegion", typeof(ImageView)); 
+            _regionManager.RegisterViewWithRegion("ContentRegion", typeof(ImageView));
+            _regionManager.RegisterViewWithRegion("ContentRegion", typeof(HexView));
+            _regionManager.RegisterViewWithRegion("ContentRegion", typeof(TextView));
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterForNavigation<FileView>();
+            containerRegistry.RegisterForNavigation<ImageView>();
+            containerRegistry.RegisterForNavigation<HexView>();
+            containerRegistry.RegisterForNavigation<TextView>();
             containerRegistry.RegisterSingleton<IAddDeleteFile, AddDeleteFile>();
             containerRegistry.RegisterSingleton<FileViewModel>();
         }

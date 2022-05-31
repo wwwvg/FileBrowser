@@ -12,6 +12,7 @@ using FileBrowser.Events;
 using MainModule.Events;
 using System.Windows.Media;
 using System.Windows.Input;
+using Prism.Regions;
 
 namespace MainModule.ViewModels
 {
@@ -44,11 +45,12 @@ namespace MainModule.ViewModels
         }
 
         IEventAggregator _eventAggregator;                  // IEventAggregator - предназначен для отправки сообщений
+        IRegionManager _regionManager;
         #endregion
 
-#region КОМАНДЫ  
-       
-    #region ВЫБОР ФАЙЛА ИЛИ КАТАЛОГА
+        #region КОМАНДЫ  
+
+        #region ВЫБОР ФАЙЛА ИЛИ КАТАЛОГА
 
         private DelegateCommand _selectedCommandListView;
         public DelegateCommand SelectedCommandListView =>
@@ -69,15 +71,31 @@ namespace MainModule.ViewModels
 
         void ExecuteDoubleClicked()
         {
-            if (SelectedFile == null)
+            if (SelectedFile == null) 
                 return;
 
-            if (SelectedFile.Type == FileType.Folder)
-                SetFoldersAndFiles(SelectedFile.FullPath);
-            else if (SelectedFile.Type == FileType.Back)
+            var parameters = new NavigationParameters();
+            parameters.Add("FileInfoModel", SelectedFile);
+
+            switch (SelectedFile.Type)
             {
-                SetFoldersAndFiles(SelectedFile.FullPath);
+                case FileType.Back:
+                case FileType.Folder:
+                    SetFoldersAndFiles(SelectedFile.FullPath);
+                    break;
+                case FileType.Image:
+                    _regionManager.RequestNavigate("ContentRegion", "ImageView", parameters);
+                    break;
+                case FileType.Text:
+                    _regionManager.RequestNavigate("ContentRegion", "TextView", parameters);
+                    break;
+                case FileType.Bin:
+                   // _regionManager.RequestNavigate("ContentRegion", "HexView", parameters);
+                    break;
+                default:
+                    break;
             }
+
         }
     #endregion
 
@@ -106,7 +124,7 @@ namespace MainModule.ViewModels
                     FileType type;
                     if(item.Name.Contains(".png") || item.Name.Contains(".bmp") || item.Name.Contains(".jpg") || item.Name.Contains(".gif"))
                         type = FileType.Image;
-                    else if(item.Name.Contains(".txt") || item.Name.Contains(".cfg") || item.Name.Contains(".ini") || item.Name.Contains(".log"))
+                    else if(item.Name.Contains(".txt") || item.Name.Contains(".cfg") || item.Name.Contains(".ini") || item.Name.Contains(".log") || item.Name.Contains(".csv"))
                         type = FileType.Text;
                     else
                         type = FileType.Bin;
@@ -116,20 +134,22 @@ namespace MainModule.ViewModels
                     Files.Add(new FileInfoModel { Icon = imageSource, Type = type, FullPath = item.FullName, Name = item.Name, Size = Bytes.SizeSuffix(item.Length), TimeCreated = item.LastWriteTime.ToString("dd/MM/yyyy  hh:mm") });
                 }
 
+                if (Files.Count != 0)
+                    SelectedFile = Files[0];
             }
             catch (UnauthorizedAccessException) // некотрые системные папки недоступны, но если запустить программу с админскими привилегиями то все ОК.
             {
                 Files.Add(new FileInfoModel { Icon = IconForFile.GetIconForFile(FileType.Back), Type = FileType.Back, Name = "[..]", FullPath = dir.Parent.FullName });
             }
 
-            if(Files.Count != 0)
-                SelectedFile = Files[0];
+            
         }
 
 
         #region КОНСТРУКТОР
-        public FileViewModel(IEventAggregator eventAggregator)
+        public FileViewModel(IEventAggregator eventAggregator, IRegionManager regionManager)
         {
+            _regionManager = regionManager;
             _eventAggregator = eventAggregator;
             _eventAggregator.GetEvent<DriveChanged>().Subscribe(SetFoldersAndFiles);  // диск или файл/каталог изменился -> пришло от << DriveViewModel >>
         }

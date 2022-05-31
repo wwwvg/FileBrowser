@@ -4,7 +4,7 @@ using Prism.Ioc;
 using Prism.Modularity;
 using System.Windows;
 using MainModule;
-
+using PrismDemo.Dialogs;
 
 namespace FileBrowser
 {
@@ -25,7 +25,7 @@ namespace FileBrowser
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
+            containerRegistry.RegisterDialog<MessageDialog, MessageDialogViewModel>();
         }
     }
 }
