@@ -57,7 +57,7 @@ namespace MainModule.ViewModels
         void ExecuteSelectedCommandListView()
         {
             if(SelectedFile != null) // посылаем событие изменения выбора файла или каталога -> подписчик ->  << StatusBarViewModel >>
-                _eventAggregator.GetEvent<ListViewSelectionChanged>().Publish($"Путь: {SelectedFile.FullPath}         Размер: {SelectedFile.Size}         Дата и время изменения: {SelectedFile.TimeCreated}");
+                _eventAggregator.GetEvent<ListViewSelectionChanged>().Publish(SelectedFile);
         }
         #endregion
 

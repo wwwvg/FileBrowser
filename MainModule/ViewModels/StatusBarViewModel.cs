@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Prism.Events;
 using FileBrowser.Events;
+using MainModule.Models;
 
 namespace MainModule.ViewModels
 {
@@ -21,9 +22,10 @@ namespace MainModule.ViewModels
             eventAggregator.GetEvent<ListViewSelectionChanged>().Subscribe(SetStatusBarText);  // диск или файл/каталог изменился -> пришло от << FileViewModel >>
         }
 
-        void SetStatusBarText(string text)
+        void SetStatusBarText(FileInfoModel selectedFile)
         {
-            About = text;
+            About = $"Путь: {selectedFile.FullPath}         Размер: {selectedFile.Size}         Дата и время изменения: {selectedFile.TimeCreated}";
         }
     }
 }
+

@@ -3,6 +3,8 @@ using Prism.Modularity;
 using Prism.Regions;
 using System;
 using MainModule.Views;
+using MainModule.Services;
+using MainModule.ViewModels;
 
 namespace MainModule
 {
@@ -27,6 +29,8 @@ namespace MainModule
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterForNavigation<FileView>();
+            containerRegistry.RegisterSingleton<IAddDeleteFile, AddDeleteFile>();
+            containerRegistry.RegisterSingleton<FileViewModel>();
         }
     }
 }

@@ -66,12 +66,19 @@ namespace MainModule.ViewModels
 
             foreach (var drive in drives) //добавляем их в ComboBox
             {
-                _drives.Add(new DriveModel()
+                try
                 {
-                    Name = $"{drive.Name} ",
-                    Icon = new BitmapImage(new Uri("..\\Icons\\HardDrive.png", UriKind.Relative)),
-                    FreeSpace = $"  [{drive.VolumeLabel}]  {Bytes.SizeSuffix(drive.TotalFreeSpace)} из {Bytes.SizeSuffix(drive.TotalSize)}  свободно"
-                });
+                    _drives.Add(new DriveModel() 
+                    {
+                        Name = $"{drive.Name} ",
+                        Icon = new BitmapImage(new Uri("..\\Icons\\HardDrive.png", UriKind.Relative)),
+                        FreeSpace = $"  [{drive.VolumeLabel}]  {Bytes.SizeSuffix(drive.TotalFreeSpace)} из {Bytes.SizeSuffix(drive.TotalSize)}  свободно"
+                    });
+                }
+                catch(Exception ex) // не все диски м.б. доступны (например - сетевой)
+                {
+
+                }
             }
             DriveSelected(_drives[0]); // выбираем диск C:\
             FreeSpace = $"  [{drives[0].VolumeLabel}]  {Bytes.SizeSuffix(drives[0].TotalFreeSpace)} из {Bytes.SizeSuffix(drives[0].TotalSize)} свободно"; // справа отображаем доступный объем памяти
