@@ -24,7 +24,9 @@ namespace MainModule.ViewModels.Content
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            return true;
+            if (navigationContext.Parameters.ContainsKey("FileInfoModel"))
+                return true;
+            return false;
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
@@ -44,28 +46,37 @@ namespace MainModule.ViewModels.Content
 
         void SetText()
         {
-            Text = "";
-            using (StreamReader reader = new StreamReader(_fileInfoModel.FullPath, Encoding.UTF8))
+            try
             {
-                string? line;
-                while ((line = reader.ReadLine()) != null)
+                Text = "";
+                using (StreamReader reader = new StreamReader(_fileInfoModel.FullPath, Encoding.UTF8))
                 {
-                    Text += line + "\n";
+                    string? line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        Text += line + "\n";
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+
             }
         }
 
         async Task SetTextAsync()
         {
+            string text = string.Empty;
             // асинхронное чтение
             using (StreamReader reader = new StreamReader(_fileInfoModel.FullPath))
             {
                 string? line;
                 while ((line = await reader.ReadLineAsync()) != null)
                 {
-                    Text += line + "\n";
+                    text += line + "\n";
                 }
             }
+            Text = text;
         }
 
 

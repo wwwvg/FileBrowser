@@ -32,7 +32,9 @@ namespace MainModule.ViewModels.Content
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            return true;
+            if (navigationContext.Parameters.ContainsKey("FileInfoModel"))
+                return true;
+            return false;
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)

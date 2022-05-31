@@ -63,9 +63,9 @@ namespace MainModule.ViewModels
         }
         #endregion
 
-    #region ДВОЙНОЙ ЩЕЛЧОК
+        #region ДВОЙНОЙ ЩЕЛЧОК
 
-        private DelegateCommand _doubleClicked;
+        DelegateCommand _doubleClicked;
         public DelegateCommand DoubleClicked =>
             _doubleClicked ?? (_doubleClicked = new DelegateCommand(ExecuteDoubleClicked));
 
@@ -84,22 +84,30 @@ namespace MainModule.ViewModels
                     SetFoldersAndFiles(SelectedFile.FullPath);
                     break;
                 case FileType.Image:
-                    _regionManager.RequestNavigate("ContentRegion", "ImageView", parameters);
+                    _regionManager.RequestNavigate("ContentRegion", "ImageView", Callback, parameters);
                     break;
                 case FileType.Text:
-                    _regionManager.RequestNavigate("ContentRegion", "TextView", parameters);
+                    _regionManager.RequestNavigate("ContentRegion", "TextView", Callback, parameters);
                     break;
                 case FileType.Bin:
-                   // _regionManager.RequestNavigate("ContentRegion", "HexView", parameters);
+                    _regionManager.RequestNavigate("ContentRegion", "HexView", Callback, parameters);
                     break;
                 default:
                     break;
             }
 
         }
-    #endregion
+        private void Callback(NavigationResult result)
+        {
+            if (result.Error != null)
+            {
+                int i = 0;
+                //handle error
+            }
+        }
+        #endregion
 
-#endregion
+        #endregion
 
         void SetFoldersAndFiles(string path) // добавление папок и файлов
         {
@@ -122,9 +130,9 @@ namespace MainModule.ViewModels
                 foreach (var item in files)
                 {
                     FileType type;
-                    if(item.Name.Contains(".png") || item.Name.Contains(".bmp") || item.Name.Contains(".jpg") || item.Name.Contains(".gif"))
+                    if(item.Extension ==".png" || item.Extension == ".bmp" || item.Extension == ".jpg" || item.Extension == ".gif")
                         type = FileType.Image;
-                    else if(item.Name.Contains(".txt") || item.Name.Contains(".cfg") || item.Name.Contains(".ini") || item.Name.Contains(".log") || item.Name.Contains(".csv"))
+                    else if(item.Extension ==".txt" || item.Extension == ".cfg" || item.Extension == ".ini" || item.Extension == ".log" || item.Extension == ".csv" || item.Extension == ".xml")
                         type = FileType.Text;
                     else
                         type = FileType.Bin;
@@ -151,7 +159,7 @@ namespace MainModule.ViewModels
         {
             _regionManager = regionManager;
             _eventAggregator = eventAggregator;
-            _eventAggregator.GetEvent<DriveChanged>().Subscribe(SetFoldersAndFiles);  // диск или файл/каталог изменился -> пришло от << DriveViewModel >>
+            _eventAggregator.GetEvent<DriveChanged>().Subscribe(SetFoldersAndFiles);  // диск или файл/каталог изменился -> пришло от << DriveViewModel >>        
         }
         #endregion
     }
