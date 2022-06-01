@@ -48,7 +48,7 @@ namespace MainModule.ViewModels.Content
 
         }
 
-        void SetText()
+        void SetText()                                    //================================================> добавить StringBuilder
         {
             try
             {
@@ -68,20 +68,20 @@ namespace MainModule.ViewModels.Content
             }
         }
 
-        async Task SetTextAsync()
-        {
-            string text = string.Empty;
-            // асинхронное чтение
-            using (StreamReader reader = new StreamReader(_fileInfoModel.FullPath))
-            {
-                string? line;
-                while ((line = await reader.ReadLineAsync()) != null)
-                {
-                    text += line + "\n";
-                }
-            }
-            Text = text;
-        }
+        //async Task SetTextAsync()
+        //{
+        //    string text = string.Empty;
+        //    // асинхронное чтение
+        //    using (StreamReader reader = new StreamReader(_fileInfoModel.FullPath))
+        //    {
+        //        string? line;
+        //        while ((line = await reader.ReadLineAsync()) != null)
+        //        {
+        //            text += line + "\n";
+        //        }
+        //    }
+        //    Text = text;
+        //}
 
 
         public TextViewModel(IEventAggregator eventAggregator, IRegionManager regionManager)
