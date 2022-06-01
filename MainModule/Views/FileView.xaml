@@ -11,7 +11,8 @@
             <KeyBinding Gesture="Enter" Command="{Binding DoubleClicked}" />
         </Grid.InputBindings>
         <ListView ItemsSource="{Binding Files}" Grid.Column="0" Margin="5"
-                  SelectedItem="{Binding SelectedFile}">
+                  SelectedItem="{Binding SelectedFile}"
+                  SelectedIndex="{Binding SelectedIndex, Mode=OneWay}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Имя">

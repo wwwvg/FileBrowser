@@ -83,7 +83,7 @@ namespace MainModule.ViewModels
             }
             catch (Exception ex) // не все диски м.б. доступны (например - сетевой)
             {
-
+                _eventAggregator.GetEvent<Error>().Publish(ex.Message);
             }
         }
     }

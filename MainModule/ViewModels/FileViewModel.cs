@@ -30,6 +30,13 @@ namespace MainModule.ViewModels
             set => SetProperty(ref _selectedFile, value);
         }
 
+        private string _selectedIndex;
+        public string SelectedIndex
+        {
+            get { return _selectedIndex; }
+            set { SetProperty(ref _selectedIndex, value); }
+        }
+
         private ObservableCollection<FileInfoModel> _files = new(); // список файлов и каталогов
         public ObservableCollection<FileInfoModel> Files  // Файлы и каталоги         
         {

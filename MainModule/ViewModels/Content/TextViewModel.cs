@@ -33,38 +33,37 @@ namespace MainModule.ViewModels.Content
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            int i = 0;
+
+        }
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
             if (navigationContext.Parameters.ContainsKey("FileInfoModel"))
             {
                 _fileInfoModel = navigationContext.Parameters.GetValue<FileInfoModel>("FileInfoModel");
                 SetText();
             }
-            else
-                _eventAggregator.GetEvent<Error>().Publish("if (n!avigationContext.Parameters.ContainsKey(\"FileInfoModel\")");
         }
 
-        public void OnNavigatedTo(NavigationContext navigationContext)
+        void SetText()                                   
         {
-
-        }
-
-        void SetText()                                    //================================================> добавить StringBuilder
-        {
+            StringBuilder text = new StringBuilder();
             try
-            {
-                Text = "";
+            {  
                 using (StreamReader reader = new StreamReader(_fileInfoModel.FullPath, Encoding.UTF8))
                 {
                     string? line;
                     while ((line = reader.ReadLine()) != null)
                     {
-                        Text += line + "\n";
+                        text.Append(line + "\n");
                     }
                 }
+                Text = text.ToString();
             }
             catch (Exception ex)
             {
                 _eventAggregator.GetEvent<Error>().Publish(ex.Message);
+                return;
             }
         }
 

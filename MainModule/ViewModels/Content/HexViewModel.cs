@@ -40,19 +40,17 @@ namespace MainModule.ViewModels.Content
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            if (navigationContext.Parameters.ContainsKey("FileInfoModel"))
-            {
-                _fileInfoModel = navigationContext.Parameters.GetValue<FileInfoModel>("FileInfoModel");
-                _bufferPos = 0;
-                Text = "";
-                SetText();
-            }
-            //SetTextAsync();
+            
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-
+            if (navigationContext.Parameters.ContainsKey("FileInfoModel"))
+            {
+                _fileInfoModel = navigationContext.Parameters.GetValue<FileInfoModel>("FileInfoModel");
+                _bufferPos = 0;
+                SetText();
+            }
         }
 
         void SetText()
@@ -70,7 +68,7 @@ namespace MainModule.ViewModels.Content
                     )
                     )
             {
-
+                br.BaseStream.Seek(100, SeekOrigin.Begin);
                 byte[] inbuff = new byte[0];
                 int b = 0;
                 while ((inbuff = br.ReadBytes(16)).Length > 0)
@@ -80,8 +78,8 @@ namespace MainModule.ViewModels.Content
                         text.Append(digits[(inbuff[b] / 16) % 16] + digits[inbuff[b] % 16] + " ");
                     }
                     text.Append(digits[(inbuff[b] / 16) % 16] + digits[inbuff[b] % 16] + "\n");
-                    if (_bufferPos++ % 100 == 0)
-                        break;
+                   // if (_bufferPos++ % 100 == 0)
+                     //   break;
                 }
             }
             Text = text.ToString();
