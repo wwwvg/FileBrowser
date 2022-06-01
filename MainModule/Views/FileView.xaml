@@ -2,18 +2,21 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/" 
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             prism:ViewModelLocator.AutoWireViewModel="True">
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
+             xmlns:local="clr-namespace:MainModule.Helpers"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+
+>
     
     <Grid>
         <!--ОТОБРАЖЕНИЕ КАТАЛОГОВ И ФАЙЛОВ-->
         <Grid.InputBindings>
             <KeyBinding Gesture="Enter" Command="{Binding DoubleClicked}" />
         </Grid.InputBindings>
-        <ListView ItemsSource="{Binding Files}" Grid.Column="0" Margin="5"
+        <local:ListView ItemsSource="{Binding Files}" Grid.Column="0" Margin="5"
                   SelectedItem="{Binding SelectedFile}"
-                  SelectedIndex="{Binding SelectedIndex, Mode=OneWay}">
-            <ListView.View>
+                  SelectedIndex="{Binding SelectedIndex}">
+            <local:ListView.View>
                 <GridView>
                     <GridViewColumn Header="Имя">
                         <GridViewColumn.CellTemplate>
@@ -28,19 +31,19 @@
                     <GridViewColumn Header="Размер" DisplayMemberBinding="{Binding Size}"/>
                     <GridViewColumn Header="Дата" DisplayMemberBinding="{Binding TimeCreated}"/>
                 </GridView>
-            </ListView.View>
+            </local:ListView.View>
 
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <prism:InvokeCommandAction Command="{Binding SelectedCommandListView}"
-                                               CommandParameter="{Binding SelectedFile}" />
+                                               CommandParameter="{Binding SelectedFile, Mode=TwoWay}" />
                 </i:EventTrigger>
                 <i:EventTrigger EventName="MouseDoubleClick">
                     <prism:InvokeCommandAction Command="{Binding DoubleClicked}"
-                                               CommandParameter="{Binding SelectedFile}" />
+                                               CommandParameter="{Binding SelectedFile, Mode=TwoWay}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
-        </ListView>
+        </local:ListView>
         
     </Grid>
 </UserControl>

@@ -30,12 +30,14 @@ namespace MainModule.ViewModels
             set => SetProperty(ref _selectedFile, value);
         }
 
-        private string _selectedIndex;
-        public string SelectedIndex
+        private int _selectedIndex;
+        public int SelectedIndex
         {
             get { return _selectedIndex; }
-            set { SetProperty(ref _selectedIndex, value); }
+            set { SetProperty(ref _selectedIndex, value);}
         }
+
+        private Stack<int> _previousSelectedIndexes = new(); 
 
         private ObservableCollection<FileInfoModel> _files = new(); // список файлов и каталогов
         public ObservableCollection<FileInfoModel> Files  // Файлы и каталоги         
@@ -87,8 +89,13 @@ namespace MainModule.ViewModels
             switch (SelectedFile.Type)
             {
                 case FileType.Back:
-                case FileType.Folder:
                     SetFoldersAndFiles(SelectedFile.FullPath);
+                    SelectedIndex = _previousSelectedIndexes.Pop();
+                    break;
+                case FileType.Folder:
+                    _previousSelectedIndexes.Push(SelectedIndex);
+                    SetFoldersAndFiles(SelectedFile.FullPath);
+                    SelectedIndex = 0;
                     break;
                 case FileType.Image:
                     _regionManager.RequestNavigate("ContentRegion", "ImageView", Callback, parameters);
@@ -104,6 +111,7 @@ namespace MainModule.ViewModels
             }
 
         }
+
         private void Callback(NavigationResult result)
         {
             if (result.Error != null)
@@ -124,7 +132,9 @@ namespace MainModule.ViewModels
             { 
                 DirectoryInfo[] directories = dir.GetDirectories();
                 if (dir.Parent != null)
-                    Files.Add(new FileInfoModel { Icon = IconForFile.GetIconForFile(FileType.Back), Type = FileType.Back, Name = "[..]", FullPath = dir.Parent.FullName });
+                {
+                    Files.Add(new FileInfoModel { Icon = IconForFile.GetIconForFile(FileType.Back), Type = FileType.Back, Name = "[..]", FullPath = dir.Parent.FullName });                
+                }
 
                 foreach (var item in directories)
                 {
@@ -148,16 +158,11 @@ namespace MainModule.ViewModels
 
                     Files.Add(new FileInfoModel { Icon = imageSource, Type = type, FullPath = item.FullName, Name = item.Name, Size = Bytes.SizeSuffix(item.Length), TimeCreated = item.LastWriteTime.ToString("dd/MM/yyyy  hh:mm") });
                 }
-
-                if (Files.Count != 0)
-                    SelectedFile = Files[0];
             }
             catch (UnauthorizedAccessException) // некотрые системные папки недоступны, но если запустить программу с админскими привилегиями то все ОК.
             {
                 Files.Add(new FileInfoModel { Icon = IconForFile.GetIconForFile(FileType.Back), Type = FileType.Back, Name = "[..]", FullPath = dir.Parent.FullName });
-            }
-
-            
+            } 
         }
 
 
