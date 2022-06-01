@@ -1,5 +1,7 @@
-﻿using MainModule.Models;
+﻿using MainModule.Events;
+using MainModule.Models;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Navigation;
 using Prism.Regions;
@@ -14,6 +16,8 @@ namespace MainModule.ViewModels.Content
 {
     public class TextViewModel : BindableBase, INavigationAware
     {
+        private IEventAggregator _eventAggregator;
+        private IRegionManager _regionManager;
         private FileInfoModel _fileInfoModel;
         private string _text;
         public string Text
@@ -24,19 +28,19 @@ namespace MainModule.ViewModels.Content
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            if (navigationContext.Parameters.ContainsKey("FileInfoModel"))
-                return true;
-            return false;
+            return true;
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
+            int i = 0;
             if (navigationContext.Parameters.ContainsKey("FileInfoModel"))
             {
                 _fileInfoModel = navigationContext.Parameters.GetValue<FileInfoModel>("FileInfoModel");
                 SetText();
             }
-            //SetTextAsync();
+            else
+                _eventAggregator.GetEvent<Error>().Publish("if (n!avigationContext.Parameters.ContainsKey(\"FileInfoModel\")");
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
@@ -60,7 +64,7 @@ namespace MainModule.ViewModels.Content
             }
             catch (Exception ex)
             {
-
+                _eventAggregator.GetEvent<Error>().Publish(ex.Message);
             }
         }
 
@@ -80,9 +84,10 @@ namespace MainModule.ViewModels.Content
         }
 
 
-        public TextViewModel()
+        public TextViewModel(IEventAggregator eventAggregator, IRegionManager regionManager)
         {
-
+            _regionManager = regionManager;
+            _eventAggregator = eventAggregator;
         }
     }
 }
