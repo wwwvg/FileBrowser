@@ -6,6 +6,7 @@
     <Grid>
         <StatusBar Name="StatusBarFileInfo">
             <Label Content="{Binding About}"></Label>
+            <ContentControl prism:RegionManager.RegionName="ErrorRegion"/>
         </StatusBar>
     </Grid>
 </UserControl>

@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="MainModule.Views.ErrorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:prism="http://prismlibrary.com/"             
+             prism:ViewModelLocator.AutoWireViewModel="True">
+    
+    <Grid Margin="5 0 0 0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Image Grid.Column="0" Source="{Binding Image}" Height="20" VerticalAlignment="Center"></Image>
+        <Label x:Name="_textBlock" Grid.Column="1" Content="{Binding Message}" Margin="5 0 0 0" VerticalAlignment="Center">
+            <!--<TextBlock.Triggers>
+                <EventTrigger RoutedEvent="TextBlock.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                    Storyboard.TargetName="_textBlock" 
+                                    Storyboard.TargetProperty="(TextBlock.Opacity)"
+                                    From="1.0" To="0.0" Duration="0:0:4">
+                            <DoubleAnimation.EasingFunction>
+                                <ElasticEase EasingMode="EaseOut"></ElasticEase>
+                            </DoubleAnimation.EasingFunction>
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </TextBlock.Triggers>-->
+        </Label>
+    </Grid>
+</UserControl>

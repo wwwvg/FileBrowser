@@ -6,6 +6,7 @@ using System.Linq;
 using Prism.Events;
 using FileBrowser.Events;
 using MainModule.Models;
+using MainModule.Events;
 
 namespace MainModule.ViewModels
 {
@@ -24,7 +25,8 @@ namespace MainModule.ViewModels
 
         void SetStatusBarText(FileInfoModel selectedFile)
         {
-            About = $"Путь: {selectedFile.FullPath}         Размер: {selectedFile.Size}         Дата и время изменения: {selectedFile.TimeCreated}";
+            string statusBarText = $"Путь: {selectedFile.FullPath}         Размер: {selectedFile.Size}         Дата и время изменения: {selectedFile.TimeCreated}";
+            About = statusBarText;
         }
     }
 }

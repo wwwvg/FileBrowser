@@ -6,7 +6,7 @@
              prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid>
         <ScrollViewer>
-            <TextBox Text="{Binding Text}" FontFamily="Courier New"></TextBox>
+            <TextBox Text="{Binding Text}" FontFamily="Courier New" IsReadOnly="True"></TextBox>
             <!--<RichTextBox FontFamily="Courier New">
                 <FlowDocument PageHeight="180">
                     <Paragraph>
@@ -14,11 +14,11 @@
                     </Paragraph>
                 </FlowDocument>
             </RichTextBox>-->
-            <i:Interaction.Triggers>
+            <!--<i:Interaction.Triggers>
                 <i:EventTrigger EventName="ScrollChanged">
                     <prism:InvokeCommandAction Command="{Binding ScrollChanged}"/>
                 </i:EventTrigger>
-            </i:Interaction.Triggers>
+            </i:Interaction.Triggers>-->
         </ScrollViewer>
     </Grid>
 </UserControl>

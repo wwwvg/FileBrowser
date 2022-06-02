@@ -24,9 +24,7 @@ namespace MainModule
             _regionManager.RegisterViewWithRegion("FileListRegion", typeof(FileView)); 
             _regionManager.RegisterViewWithRegion("StatusBarRegion", typeof(StatusBarView));
             _regionManager.RegisterViewWithRegion("DriveRegion", typeof(DriveView));
-            //_regionManager.RegisterViewWithRegion("ContentRegion", typeof(ImageView));
-            //_regionManager.RegisterViewWithRegion("ContentRegion", typeof(HexView));
-            //_regionManager.RegisterViewWithRegion("ContentRegion", typeof(TextView));
+            _regionManager.RegisterViewWithRegion("ErrorRegion", typeof(ErrorView));
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)

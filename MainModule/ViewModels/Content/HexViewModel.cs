@@ -1,5 +1,7 @@
-﻿using MainModule.Models;
+﻿using MainModule.Events;
+using MainModule.Models;
 using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
@@ -14,6 +16,8 @@ namespace MainModule.ViewModels.Content
     public class HexViewModel : BindableBase, INavigationAware
     {
         private FileInfoModel _fileInfoModel;
+
+        IEventAggregator _eventAggregator; // будет посылать сообщения об ошибках
 
         private int _bufferPos = 0;
 
@@ -57,32 +61,43 @@ namespace MainModule.ViewModels.Content
         {
             StringBuilder text = new StringBuilder();
             string[] digits = new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
-            using (System.IO.BinaryReader br = new System.IO.BinaryReader
-                (new System.IO.FileStream
-                        (
-                        _fileInfoModel.FullPath,
-                        System.IO.FileMode.Open,
-                        System.IO.FileAccess.Read,
-                        System.IO.FileShare.None,
-                        1024)
-                    )
-                    )
+            int counter = 0;
+            string hexNumber = string.Empty;
+            try
             {
-                br.BaseStream.Seek(100, SeekOrigin.Begin);
-                byte[] inbuff = new byte[0];
-                int b = 0;
-                while ((inbuff = br.ReadBytes(16)).Length > 0)
+                using (System.IO.BinaryReader br = new System.IO.BinaryReader
+                    (new System.IO.FileStream
+                            (
+                            _fileInfoModel.FullPath,
+                            System.IO.FileMode.Open,
+                            System.IO.FileAccess.Read,
+                            System.IO.FileShare.None,
+                            1024)
+                        )
+                        )
                 {
-                    for (b = 0; b < inbuff.Length - 1; b++)
+                    if (counter++ % 16 == 0)
+                        hexNumber = counter.ToString("X");
+                    //br.BaseStream.Seek(100, SeekOrigin.Begin);
+                    byte[] inbuff = new byte[0];
+                    int b = 0;
+                    while ((inbuff = br.ReadBytes(16)).Length > 0)
                     {
-                        text.Append(digits[(inbuff[b] / 16) % 16] + digits[inbuff[b] % 16] + " ");
+                        for (b = 0; b < inbuff.Length - 1; b++)
+                        {
+                            text.Append(digits[(inbuff[b] / 16) % 16] + digits[inbuff[b] % 16] + " ");
+                        }
+                        text.Append(digits[(inbuff[b] / 16) % 16] + digits[inbuff[b] % 16] + "\n");
+                        // if (_bufferPos++ % 100 == 0)
+                        //   break;
                     }
-                    text.Append(digits[(inbuff[b] / 16) % 16] + digits[inbuff[b] % 16] + "\n");
-                   // if (_bufferPos++ % 100 == 0)
-                     //   break;
                 }
+                Text = text.ToString();
             }
-            Text = text.ToString();
+            catch(Exception ex)
+            {
+                _eventAggregator.GetEvent<Error>().Publish(ex.Message);
+            }
         }
 
 
@@ -98,9 +113,9 @@ namespace MainModule.ViewModels.Content
                 }
             }
         }
-        public HexViewModel()
+        public HexViewModel(IEventAggregator eventAggregator)
         {
-
+            _eventAggregator = eventAggregator;
         }
     }
 }

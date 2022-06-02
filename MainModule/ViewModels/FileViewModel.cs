@@ -13,6 +13,7 @@ using MainModule.Events;
 using System.Windows.Media;
 using System.Windows.Input;
 using Prism.Regions;
+using System.Windows;
 
 namespace MainModule.ViewModels
 {
@@ -22,6 +23,8 @@ namespace MainModule.ViewModels
         /// FileViewModel -> отображает ComboBox с выбранным диском и ListView со списком файлов и папок.
         /// </summary>
 #region СВОЙСТВА
+
+        private bool _isError = false; // для своевременного удаления сообщения об ошибке
 
         private FileInfoModel _selectedFile;    // выбранный файл или каталог            Icon(ImageSource) | Type(enum) | FullPath | Name | Type | Size | TimeCreated
         public FileInfoModel SelectedFile
@@ -67,8 +70,12 @@ namespace MainModule.ViewModels
 
         void ExecuteSelectedCommandListView()
         {
-            if(SelectedFile != null) // посылаем событие изменения выбора файла или каталога -> подписчик ->  << StatusBarViewModel >>
+            if (SelectedFile != null) // посылаем событие изменения выбора файла или каталога -> подписчик ->  << StatusBarViewModel >>
+            {
                 _eventAggregator.GetEvent<ListViewSelectionChanged>().Publish(SelectedFile);
+            }
+            if(_isError == false)
+                _eventAggregator.GetEvent<Error>().Publish(""); // очистить информацию об ошибке
         }
         #endregion
 
@@ -91,6 +98,7 @@ namespace MainModule.ViewModels
                 case FileType.Back:
                     SetFoldersAndFiles(SelectedFile.FullPath);
                     SelectedIndex = _previousSelectedIndexes.Pop();
+                    _eventAggregator.GetEvent<Error>().Publish(""); // очистить информацию об ошибке
                     break;
                 case FileType.Folder:
                     _previousSelectedIndexes.Push(SelectedIndex);
@@ -116,7 +124,6 @@ namespace MainModule.ViewModels
         {
             if (result.Error != null)
             {
-                int i = 0;
                 //handle error
             }
         }
@@ -138,6 +145,7 @@ namespace MainModule.ViewModels
 
                 foreach (var item in directories)
                 {
+                    _isError = false;
                     if (item.Attributes == FileAttributes.Hidden || item.Attributes == FileAttributes.System)
                         continue;
                     Files.Add(new FileInfoModel { Icon = IconForFile.GetIconForFile(FileType.Folder), Type = FileType.Folder, FullPath = item.FullName, Name = $"[{item.Name}]", Size = "<Папка>", TimeCreated = item.LastWriteTime.ToString("dd/MM/yyyy  hh:mm") });
@@ -146,6 +154,7 @@ namespace MainModule.ViewModels
                 FileInfo[] files = dir.GetFiles();
                 foreach (var item in files)
                 {
+                    _isError = false;
                     FileType type;
                     if(item.Extension ==".png" || item.Extension == ".bmp" || item.Extension == ".jpg" || item.Extension == ".gif")
                         type = FileType.Image;
@@ -159,10 +168,11 @@ namespace MainModule.ViewModels
                     Files.Add(new FileInfoModel { Icon = imageSource, Type = type, FullPath = item.FullName, Name = item.Name, Size = Bytes.SizeSuffix(item.Length), TimeCreated = item.LastWriteTime.ToString("dd/MM/yyyy  hh:mm") });
                 }
             }
-            catch (UnauthorizedAccessException ex) // некотрые системные папки недоступны, но если запустить программу с админскими привилегиями то все ОК.
+            catch (UnauthorizedAccessException ex) // некоторые системные папки и файлы недоступны, но если запустить программу с админскими привилегиями то все ОК.
             {
+                _isError = true;
                 Files.Add(new FileInfoModel { Icon = IconForFile.GetIconForFile(FileType.Back), Type = FileType.Back, Name = "[..]", FullPath = dir.Parent.FullName });
-                _eventAggregator.GetEvent<Error>().Publish(ex.Message);
+                _eventAggregator.GetEvent<Error>().Publish(ex.Message);     
             } 
         }
 
