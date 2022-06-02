@@ -159,9 +159,10 @@ namespace MainModule.ViewModels
                     Files.Add(new FileInfoModel { Icon = imageSource, Type = type, FullPath = item.FullName, Name = item.Name, Size = Bytes.SizeSuffix(item.Length), TimeCreated = item.LastWriteTime.ToString("dd/MM/yyyy  hh:mm") });
                 }
             }
-            catch (UnauthorizedAccessException) // некотрые системные папки недоступны, но если запустить программу с админскими привилегиями то все ОК.
+            catch (UnauthorizedAccessException ex) // некотрые системные папки недоступны, но если запустить программу с админскими привилегиями то все ОК.
             {
                 Files.Add(new FileInfoModel { Icon = IconForFile.GetIconForFile(FileType.Back), Type = FileType.Back, Name = "[..]", FullPath = dir.Parent.FullName });
+                _eventAggregator.GetEvent<Error>().Publish(ex.Message);
             } 
         }
 
