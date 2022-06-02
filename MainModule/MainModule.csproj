@@ -19,6 +19,7 @@
     <None Remove="Icons\Refresh.png" />
     <None Remove="Icons\Text.png" />
     <None Remove="Icons\Warning.png" />
+    <None Remove="Icons\Warning2.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,6 +39,7 @@
     <Resource Include="Icons\Refresh.png" />
     <Resource Include="Icons\Text.png" />
     <Resource Include="Icons\Warning.png" />
+    <Resource Include="Icons\Warning2.png" />
   </ItemGroup>
 
 </Project>
