@@ -10,23 +10,6 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Image Grid.Column="0" Source="{Binding Image}" Height="20" VerticalAlignment="Center"></Image>
-        <Label x:Name="_textBlock" Grid.Column="1" Content="{Binding Message}" Margin="5 0 0 0" VerticalAlignment="Center">
-            <!--<TextBlock.Triggers>
-                <EventTrigger RoutedEvent="TextBlock.Loaded">
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation
-                                    Storyboard.TargetName="_textBlock" 
-                                    Storyboard.TargetProperty="(TextBlock.Opacity)"
-                                    From="1.0" To="0.0" Duration="0:0:4">
-                            <DoubleAnimation.EasingFunction>
-                                <ElasticEase EasingMode="EaseOut"></ElasticEase>
-                            </DoubleAnimation.EasingFunction>
-                            </DoubleAnimation>
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger>
-            </TextBlock.Triggers>-->
-        </Label>
+        <Label x:Name="_textBlock" Grid.Column="1" Content="{Binding Message}" Margin="5 0 0 0" VerticalAlignment="Center"></Label>
     </Grid>
 </UserControl>

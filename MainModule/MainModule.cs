@@ -1,9 +1,7 @@
 ﻿using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
-using System;
 using MainModule.Views;
-using MainModule.Services;
 using MainModule.ViewModels;
 using MainModule.Views.Content;
 
@@ -32,7 +30,6 @@ namespace MainModule
             containerRegistry.RegisterForNavigation<ImageView>();
             containerRegistry.RegisterForNavigation<HexView>();
             containerRegistry.RegisterForNavigation<TextView>();
-            containerRegistry.RegisterSingleton<IAddDeleteFile, AddDeleteFile>();
             containerRegistry.RegisterSingleton<FileViewModel>();
         }
     }

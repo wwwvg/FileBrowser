@@ -4,9 +4,7 @@
              xmlns:prism="http://prismlibrary.com/" 
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
              xmlns:local="clr-namespace:MainModule.Helpers"
-             prism:ViewModelLocator.AutoWireViewModel="True"
-
->
+             prism:ViewModelLocator.AutoWireViewModel="True">
     
     <Grid>
         <!--ОТОБРАЖЕНИЕ КАТАЛОГОВ И ФАЙЛОВ-->

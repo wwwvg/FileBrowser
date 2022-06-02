@@ -1,5 +1,6 @@
 ﻿using FileBrowser.Events;
 using MainModule.Models;
+using MainModule.ViewModels.Dialogs;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Ioc;
@@ -53,7 +54,7 @@ namespace MainModule.ViewModels
 
         void ExecuteAddFolder()
         {
-            ShowDialog();
+            
         }
 
         bool CanExecuteAddFolder()
@@ -78,7 +79,7 @@ namespace MainModule.ViewModels
 
         void ExecuteDeleteItem()
         {
-            
+            ShowDialog();
         }
 
         bool CanExecuteDeleteItem()
@@ -99,16 +100,6 @@ namespace MainModule.ViewModels
         }
         #endregion
         #endregion
-        public ToolBarViewModel(IEventAggregator eventAggregator, IDialogService dialogService)
-        {
-            _canDeleteItem = false;
-            _canAddFolder = false;
-            DeleteItemImage = new BitmapImage(new Uri("..\\Icons\\DeleteItem.png", UriKind.Relative));
-            AddFolderImage = new BitmapImage(new Uri("..\\Icons\\AddFolder.png", UriKind.Relative));
-            eventAggregator.GetEvent<ListViewSelectionChanged>().Subscribe(ChangeCanExecuteAddFolder);  // диск или файл/каталог изменился -> пришло от << FileViewModel >>
-            eventAggregator.GetEvent<ListViewSelectionChanged>().Subscribe(ChangeCanExecuteDeleteItem);  // диск или файл/каталог изменился -> пришло от << FileViewModel >>
-            _dialogService = dialogService;
-        }
         private void ShowDialog()
         {
             _dialogService.ShowMessageDialog("Hello from ViewAViewModel", r =>
@@ -122,6 +113,16 @@ namespace MainModule.ViewModels
                     MessageReceived = "Not closed by user";
                 }
             });
+        }
+        public ToolBarViewModel(IEventAggregator eventAggregator, IDialogService dialogService)
+        {
+            _canDeleteItem = false;
+            _canAddFolder = false;
+            DeleteItemImage = new BitmapImage(new Uri("..\\Icons\\DeleteItem.png", UriKind.Relative));
+            AddFolderImage = new BitmapImage(new Uri("..\\Icons\\AddFolder.png", UriKind.Relative));
+            eventAggregator.GetEvent<ListViewSelectionChanged>().Subscribe(ChangeCanExecuteAddFolder);  // диск или файл/каталог изменился -> пришло от << FileViewModel >>
+            eventAggregator.GetEvent<ListViewSelectionChanged>().Subscribe(ChangeCanExecuteDeleteItem);  // диск или файл/каталог изменился -> пришло от << FileViewModel >>
+            _dialogService = dialogService;
         }
     }
 }

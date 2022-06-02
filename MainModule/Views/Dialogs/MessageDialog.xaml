@@ -6,19 +6,28 @@
 
     <prism:Dialog.WindowStyle>
         <Style TargetType="Window">
-            <Setter Property="Height" Value="200" />
-            <Setter Property="Width" Value="400"/>
-            <Setter Property="ResizeMode" Value="NoResize" />
+            <Setter Property="Height" Value="150" />
+            <Setter Property="Width" Value="350"/>
+            <!--<Setter Property="ResizeMode" Value="NoResize"/>-->
+            <!--<Setter Property="Icon" Value="{Binding Icon}" />-->
+
         </Style>
     </prism:Dialog.WindowStyle>
     
-    <Grid x:Name="LayoutRoot" Margin="25">
+    <Grid x:Name="LayoutRoot" Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock Text="{Binding Message}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" TextWrapping="Wrap" />
-        <Button Command="{Binding CloseDialogCommand}" Content="OK" Width="75" Height="25" HorizontalAlignment="Right" Margin="0,10,0,0" Grid.Row="1" IsDefault="True" />
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,10">
+            <Button Command="{Binding DeleteCommand}" Content="Да" Width="75" Height="25" 
+                     Margin="0,10,0,0" Grid.Column="1" />
+            <Button Command="{Binding CancelCommand}" Content="Отмена" Width="75" Height="25" 
+                     Margin="5,10,0,0" IsDefault="True" Grid.Column="2" />
+        </StackPanel>
+        
     </Grid>
 </UserControl>

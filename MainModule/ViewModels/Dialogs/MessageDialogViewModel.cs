@@ -2,12 +2,16 @@
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using System;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace PrismDemo.Dialogs
 {
     public class MessageDialogViewModel : BindableBase, IDialogAware
     {
-        public string Title => "My Message Dialog";
+        public string Title => "Удалить";
+
+        public ImageSource Icon;// => new BitmapImage(new Uri("..\\Icons\\Warning.png", UriKind.Relative));
 
         private string _message;
         public string Message
@@ -16,13 +20,15 @@ namespace PrismDemo.Dialogs
             set { SetProperty(ref _message, value); }
         }
 
-        public DelegateCommand CloseDialogCommand { get; }
+        public DelegateCommand CancelCommand { get; }
 
         public event Action<IDialogResult> RequestClose;
 
         public MessageDialogViewModel()
         {
-            CloseDialogCommand = new DelegateCommand(CloseDialog);
+            CancelCommand = new DelegateCommand(CloseDialog);
+            Uri iconUri = new Uri("pack://application:,,,Icons/Warning.png", UriKind.RelativeOrAbsolute);
+            Icon = BitmapFrame.Create(iconUri);
         }
 
         private void CloseDialog()

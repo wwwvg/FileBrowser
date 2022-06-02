@@ -1,6 +1,7 @@
-﻿using System;
+﻿using Prism.Services.Dialogs;
+using System;
 
-namespace Prism.Services.Dialogs
+namespace MainModule.ViewModels.Dialogs
 {
     public static class IDialogServiceExtensions
     {
