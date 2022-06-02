@@ -7,7 +7,7 @@ namespace FileBrowser.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
-        public string Title { get; set; } = "File browser";
+        public string Title { get; set; } = "File Browser";
 
         public MainWindowViewModel()
         {

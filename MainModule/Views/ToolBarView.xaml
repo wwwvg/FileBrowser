@@ -5,11 +5,14 @@
              prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid>
         <ToolBar>
-            <Button Name="ButtonNewFolder" Command="{Binding AddFolder}" Width="25" Height="25" Margin="5, 0, 0, 0" ToolTip="Добавить каталог">
+            <Button Command="{Binding AddFolder}" Width="25" Height="25" Margin="5, 0, 0, 0" ToolTip="Добавить каталог">
                 <Image Source="{Binding AddFolderImage}" />
             </Button>
-            <Button Name="ButtonDeleteItem" Command="{Binding DeleteItem}" Width="25" Height="25" Margin="10, 0, 0, 0" ToolTip="Удалить выбранный элемент">
+            <Button Command="{Binding DeleteItem}" Width="25" Height="25" Margin="10, 0, 0, 0" ToolTip="Удалить выбранный элемент">
                 <Image Source="{Binding DeleteItemImage}"/>
+            </Button>
+            <Button Command="{Binding Refresh}" Width="25" Height="25" Margin="10, 0, 0, 0" ToolTip="Обновить">
+                <Image Source="{Binding RefreshImage}"/>
             </Button>
         </ToolBar>
     </Grid>

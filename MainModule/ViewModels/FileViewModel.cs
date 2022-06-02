@@ -22,7 +22,7 @@ namespace MainModule.ViewModels
         /// <summary>
         /// FileViewModel -> отображает ComboBox с выбранным диском и ListView со списком файлов и папок.
         /// </summary>
-#region СВОЙСТВА
+        #region СВОЙСТВА
 
         private bool _isError = false; // для своевременного удаления сообщения об ошибке
 
@@ -31,6 +31,13 @@ namespace MainModule.ViewModels
         {
             get => _selectedFile;
             set => SetProperty(ref _selectedFile, value);
+        }
+
+        private string _currentDirectory;
+        public string CurrentDirectory
+        {
+            get { return _currentDirectory; }
+            set { SetProperty(ref _currentDirectory, value); }
         }
 
         private int _selectedIndex;
@@ -138,6 +145,8 @@ namespace MainModule.ViewModels
             try
             { 
                 DirectoryInfo[] directories = dir.GetDirectories();
+                CurrentDirectory = dir.FullName;
+                _eventAggregator.GetEvent<CurrentDirectoryChanged>().Publish(CurrentDirectory); // посылаем событие изменения текущей директории
                 if (dir.Parent != null)
                 {
                     Files.Add(new FileInfoModel { Icon = IconForFile.GetIconForFile(FileType.Back), Type = FileType.Back, Name = "[..]", FullPath = dir.Parent.FullName });                
@@ -168,7 +177,7 @@ namespace MainModule.ViewModels
                     Files.Add(new FileInfoModel { Icon = imageSource, Type = type, FullPath = item.FullName, Name = item.Name, Size = Bytes.SizeSuffix(item.Length), TimeCreated = item.LastWriteTime.ToString("dd/MM/yyyy  hh:mm") });
                 }
             }
-            catch (UnauthorizedAccessException ex) // некоторые системные папки и файлы недоступны, но если запустить программу с админскими привилегиями то все ОК.
+            catch (Exception ex) // некоторые системные папки и файлы недоступны, но если запустить программу с админскими привилегиями то все ОК.
             {
                 _isError = true;
                 Files.Add(new FileInfoModel { Icon = IconForFile.GetIconForFile(FileType.Back), Type = FileType.Back, Name = "[..]", FullPath = dir.Parent.FullName });
@@ -176,13 +185,18 @@ namespace MainModule.ViewModels
             } 
         }
 
+        private void Refresh()
+        {
+            SetFoldersAndFiles(_currentDirectory);
+        }
 
         #region КОНСТРУКТОР
         public FileViewModel(IEventAggregator eventAggregator, IRegionManager regionManager)
         {
             _regionManager = regionManager;
             _eventAggregator = eventAggregator;
-            _eventAggregator.GetEvent<DriveChanged>().Subscribe(SetFoldersAndFiles);  // диск или файл/каталог изменился -> пришло от << DriveViewModel >>        
+            _eventAggregator.GetEvent<DriveChanged>().Subscribe(SetFoldersAndFiles);  // диск или файл/каталог изменился -> пришло от << DriveViewModel >>
+            _eventAggregator.GetEvent<RefreshRequested>().Subscribe(Refresh);  // нажата кнопка обновить на тулбаре -> пришло от << ToolBarViewModel >> 
         }
         #endregion
     }

@@ -25,7 +25,8 @@ namespace FileBrowser
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterDialog<MessageDialog, MessageDialogViewModel>();
+            containerRegistry.RegisterDialog<DeleteDialog, DeleteDialogViewModel>();
+            containerRegistry.RegisterDialog<AddFolderDialog, AddFolderDialogViewModel>();
         }
     }
 }

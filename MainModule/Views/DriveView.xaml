@@ -21,7 +21,7 @@
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
                         <prism:InvokeCommandAction Command="{Binding SelectedDriveCommand}"
-                                               CommandParameter="{Binding SelectedDrive}"/>
+                                                CommandParameter="{Binding SelectedDrive}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ComboBox>

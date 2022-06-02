@@ -7,13 +7,21 @@
              prism:ViewModelLocator.AutoWireViewModel="True">
     
     <Grid>
+        
         <!--ОТОБРАЖЕНИЕ КАТАЛОГОВ И ФАЙЛОВ-->
         <Grid.InputBindings>
             <KeyBinding Gesture="Enter" Command="{Binding DoubleClicked}" />
         </Grid.InputBindings>
-        <local:ListView ItemsSource="{Binding Files}" Grid.Column="0" Margin="5"
-                  SelectedItem="{Binding SelectedFile}"
-                  SelectedIndex="{Binding SelectedIndex}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <!--ТЕКУЩАЯ ДИРЕКТОРИЯ-->
+        <TextBlock Text="{Binding CurrentDirectory}" VerticalAlignment="Center" Margin="5 0 0 0"></TextBlock>
+        <!--СПИСОК ФАЙЛОВ-->
+        <local:ListView ItemsSource="{Binding Files}" Grid.Row="1" Margin="5"
+                    SelectedItem="{Binding SelectedFile}"
+                    SelectedIndex="{Binding SelectedIndex}">
             <local:ListView.View>
                 <GridView>
                     <GridViewColumn Header="Имя">
@@ -34,15 +42,15 @@
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <prism:InvokeCommandAction Command="{Binding SelectedCommandListView}"
-                                               CommandParameter="{Binding SelectedFile, Mode=TwoWay}" />
+                                                CommandParameter="{Binding SelectedFile, Mode=TwoWay}" />
                 </i:EventTrigger>
                 <i:EventTrigger EventName="MouseDoubleClick">
                     <prism:InvokeCommandAction Command="{Binding DoubleClicked}"
-                                               CommandParameter="{Binding SelectedFile, Mode=TwoWay}" />
+                                                CommandParameter="{Binding SelectedFile, Mode=TwoWay}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </local:ListView>
-        
+
     </Grid>
 </UserControl>
 
