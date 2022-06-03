@@ -1,4 +1,5 @@
 ﻿using MainModule.Events;
+using MainModule.Helpers;
 using MainModule.Models;
 using Prism.Commands;
 using Prism.Events;
@@ -17,6 +18,8 @@ namespace MainModule.ViewModels.Content
     {
         #region СВОЙСТВА
         private FileInfoModel _fileInfoModel;
+
+        private GetYieldText _hexText;
 
         IEventAggregator _eventAggregator; // будет посылать сообщения об ошибках
 
@@ -37,7 +40,19 @@ namespace MainModule.ViewModels.Content
 
         void ExecuteScrollChanged()
         {
-            int i = 0;
+            Text += _hexText.AllLinesFromFile(10);
+            //StringBuilder text = new StringBuilder();
+            //int counter = 0;
+            //foreach (var line in _hexText.AllLinesFromFile(_fileInfoModel.FullPath))
+            //{
+            //    text.Append(line);
+            //    if (counter++ == 2)
+            //    {
+            //        counter = 0;
+            //        break;
+            //    }
+            //}
+            //Text += text;
         }
         #endregion
 
@@ -49,7 +64,7 @@ namespace MainModule.ViewModels.Content
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
-            
+
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
@@ -57,8 +72,17 @@ namespace MainModule.ViewModels.Content
             if (navigationContext.Parameters.ContainsKey("FileInfoModel"))
             {
                 _fileInfoModel = navigationContext.Parameters.GetValue<FileInfoModel>("FileInfoModel");
-                //_bufferPos = 0;
-                SetText();
+                _hexText = new GetYieldText(_fileInfoModel.FullPath);
+                Text = _hexText.AllLinesFromFile(50);
+                //StringBuilder text = new StringBuilder();
+                //int counter = 0;
+                //foreach (var line in _hexText.AllLinesFromFile(_fileInfoModel.FullPath))
+                //{
+                //    text.Append(line);
+                //    if(counter++ == 50)
+                //        break;
+                //}
+                //Text = text.ToString();
             }
         }
         #endregion
@@ -99,7 +123,7 @@ namespace MainModule.ViewModels.Content
                         //   break;
                     }
                 }
-                Text = text.ToString();
+                //Text = text.ToString();
             }
             catch(Exception ex)
             {
@@ -107,7 +131,40 @@ namespace MainModule.ViewModels.Content
             }
         }
 
+        private IEnumerable<string> AllLinesFromFile()
+        {
+            LinkedList<string> Lines = new LinkedList<string>();
+            StringBuilder text = new StringBuilder();
+            string[] digits = new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
+///dddddddddddddddddddd
+            using (BinaryReader br = new BinaryReader(new System.IO.FileStream
+                            (
+                            _fileInfoModel.FullPath,
+                            System.IO.FileMode.Open,
+                            System.IO.FileAccess.Read,
+                            System.IO.FileShare.None,
+                            32)
+                        ))
+            {
 
+                byte[] inbuff = new byte[0];
+                int b = 0;
+                int count = 0;
+                int countRow = 0;
+                while ((inbuff = br.ReadBytes(16)).Length > 0)
+                {
+                    for (b = 0; b < inbuff.Length - 1; b++)
+                    {
+                        text.Append(digits[(inbuff[b] / 16) % 16] + digits[inbuff[b] % 16] + " ");
+                        count++;
+                    }
+                    text.Append(digits[(inbuff[b] / 16) % 16] + digits[inbuff[b] % 16] + "\n");
+                    //Lines.AddLast(text.ToString());
+                    yield return text.ToString();
+                    text.Clear();
+                }
+            }
+        }
         //async Task SetTextAsync()
         //{
         //    // асинхронное чтение

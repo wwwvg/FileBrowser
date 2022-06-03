@@ -5,7 +5,7 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid>
-        <ScrollViewer>
+        <!--<ScrollViewer Background="White">-->
             <TextBox Text="{Binding Text}" FontFamily="Courier New" IsReadOnly="True"></TextBox>
             <!--<RichTextBox FontFamily="Courier New">
                 <FlowDocument PageHeight="180">
@@ -14,11 +14,12 @@
                     </Paragraph>
                 </FlowDocument>
             </RichTextBox>-->
-            <!--<i:Interaction.Triggers>
-                <i:EventTrigger EventName="ScrollChanged">
+            
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseWheel">
                     <prism:InvokeCommandAction Command="{Binding ScrollChanged}"/>
                 </i:EventTrigger>
-            </i:Interaction.Triggers>-->
-        </ScrollViewer>
+            </i:Interaction.Triggers>
+        <!--</ScrollViewer>-->
     </Grid>
 </UserControl>
