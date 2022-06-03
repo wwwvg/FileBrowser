@@ -1,24 +1,22 @@
 ﻿using MainModule.Events;
+using MainModule.Helpers;
 using MainModule.Models;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
-using Prism.Navigation;
 using Prism.Regions;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MainModule.ViewModels.Content
 {
     public class TextViewModel : BindableBase, INavigationAware
     {
         #region СВОЙСТВА
-        private IEventAggregator _eventAggregator;
         private FileInfoModel _fileInfoModel;
+
+        IEventAggregator _eventAggregator; // будет посылать сообщения об ошибках
 
         private string _text;
         public string Text
@@ -28,64 +26,66 @@ namespace MainModule.ViewModels.Content
         }
         #endregion
 
+        #region КОМАНДА СКРОЛЛА
+        private DelegateCommand _scrollChanged;
+        public DelegateCommand ScrollChanged =>
+            _scrollChanged ?? (_scrollChanged = new DelegateCommand(ExecuteScrollChanged));
+
+        void ExecuteScrollChanged()
+        {
+            StringBuilder sb = new StringBuilder();
+            int count = 0;
+            while (_enumerator.MoveNext())
+            {
+                sb.AppendLine(_enumerator.Current);
+                if (count++ > 100)
+                    break;
+            }
+            Text += sb.ToString();
+        }
+        #endregion
+
         #region РЕАЛИЗАЦИЯ ИНТЕРФЕЙСА НАВИГАЦИИ (INavigationAware)
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            return true;
+            return false;  // создается новый View каждый раз при выборе файла, за счет этого освобождается << StreamReader >> и не блокирует файлы
         }
 
+        private IEnumerator<string> _enumerator;
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            if (_enumerator != null)
+            {
+                _enumerator.Dispose(); // освободили предыдущий enumerator
+            }
+            if (navigationContext.Parameters.ContainsKey("FileInfoModel"))
+            {
+                _fileInfoModel = navigationContext.Parameters.GetValue<FileInfoModel>("FileInfoModel");
+                GetYieldText.CloseStreamReader(); // освободили предыдущий ресурс
+                try
+                {
+                    StringBuilder sb = new StringBuilder();
+                    _enumerator = GetYieldText.GetLinesFromFile(_fileInfoModel.FullPath); // получаем первые 100 линий
+                    int count = 0;
+                    while (_enumerator.MoveNext())
+                    {
+                        sb.AppendLine(_enumerator.Current);  // добавляется очередная линия
+                        if (count++ > 100)
+                            break;
+                    }
+                    Text = sb.ToString();  // устанавливаюся первые 100 строк
+                }
+                catch (Exception ex)
+                {
+                    _eventAggregator.GetEvent<Error>().Publish(ex.Message);
+                }
+            }
+        }
         public void OnNavigatedFrom(NavigationContext navigationContext)
         {
 
         }
 
-        public void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            if (navigationContext.Parameters.ContainsKey("FileInfoModel"))
-            {
-                _fileInfoModel = navigationContext.Parameters.GetValue<FileInfoModel>("FileInfoModel");
-                SetText();
-            }
-        }
-        #endregion
-
-        #region ВЫВОД ТЕКСТА НА ЭКРАН
-        void SetText()                       
-        {
-            StringBuilder text = new StringBuilder();
-            try
-            {  
-                using (StreamReader reader = new StreamReader(_fileInfoModel.FullPath, Encoding.UTF8))
-                {
-                    string? line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        text.Append(line + "\n");
-                    }
-                }
-                Text = text.ToString();
-            }
-            catch (Exception ex)
-            {
-                _eventAggregator.GetEvent<Error>().Publish(ex.Message);
-                return;
-            }
-        }
-
-        //async Task SetTextAsync()
-        //{
-        //    string text = string.Empty;
-        //    // асинхронное чтение
-        //    using (StreamReader reader = new StreamReader(_fileInfoModel.FullPath))
-        //    {
-        //        string? line;
-        //        while ((line = await reader.ReadLineAsync()) != null)
-        //        {
-        //            text += line + "\n";
-        //        }
-        //    }
-        //    Text = text;
-        //}
         #endregion
 
         #region КОНСТРУКТОР

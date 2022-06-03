@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Prism.Events;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,75 +8,74 @@ using System.Threading.Tasks;
 
 namespace MainModule.Helpers
 {
-    public class GetYieldText : IDisposable
+    public static class GetYieldText
     {
-        /*
-        public IEnumerable<string> AllLinesFromFile(string path)
+        static BinaryReader _br;
+
+        static StreamReader _sr;
+
+        public static readonly string[] Digits = new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
+        public static IEnumerator<string> GetHexLinesFromFile(string path)
         {
-            LinkedList<string> Lines = new LinkedList<string>();
-            StringBuilder text = new StringBuilder();
-            string[] digits = new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
-            using (BinaryReader br = new BinaryReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None, 32)))
+            try
             {
-                br.BaseStream.Seek(0, SeekOrigin.Begin);
+                _br = new BinaryReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None, 32));
+
+                StringBuilder sb = new StringBuilder();
+                
                 byte[] inbuff = new byte[0];
                 int b = 0;
                 int count = 0;
-                int countRow = 0;
-                while ((inbuff = br.ReadBytes(16)).Length > 0)
+                while ((inbuff = _br.ReadBytes(16)).Length > 0)
                 {
+
+                    sb.Append($@"{count.ToString("X8")}   ");
+                    count += 16;
+
                     for (b = 0; b < inbuff.Length - 1; b++)
-                    {
-                        text.Append(digits[(inbuff[b] / 16) % 16] + digits[inbuff[b] % 16] + " ");
-                        count++;
-                    }
-                    text.Append(digits[(inbuff[b] / 16) % 16] + digits[inbuff[b] % 16] + "\n");
-                    //Lines.AddLast(text.ToString());
-                    yield return text.ToString();
-                    text.Clear();
+                        sb.Append(Digits[(inbuff[b] / 16) % 16] + Digits[inbuff[b] % 16] + " ");
+
+                    sb.Append(Digits[(inbuff[b] / 16) % 16] + Digits[inbuff[b] % 16]);
+                    
+                    yield return sb.ToString();
+                    sb.Clear();
                 }
             }
-        }
-        */
-
-        private BinaryReader _br;
-        public string AllLinesFromFile(int linesPerRequest)
-        {
-            LinkedList<string> Lines = new LinkedList<string>();
-            StringBuilder text = new StringBuilder();
-            string[] digits = new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
-
-            
-            
-
-            byte[] inbuff = new byte[0];
-            int b = 0;
-            int count = 0;
-            //_br.BaseStream.Position = pos;
-            //_br.BaseStream.Seek(_linesPerRequest * 32, SeekOrigin.Current);
-            while ((inbuff = _br.ReadBytes(16)).Length > 0)
+            finally
             {
-                //_br.BaseStream.Seek(10, SeekOrigin.Begin);
-                for (b = 0; b < inbuff.Length - 1; b++)
-                {
-                    text.Append(digits[(inbuff[b] / 16) % 16] + digits[inbuff[b] % 16] + " ");
-                }
-                text.Append(digits[(inbuff[b] / 16) % 16] + digits[inbuff[b] % 16] + "\n");
-                if (count++ == linesPerRequest)
-                    break;
+                CloseBinaryReader();
             }
-
-            return text.ToString();
         }
 
-        public GetYieldText(string path)
+        public static IEnumerator<string> GetLinesFromFile(string path)
         {
-            _br = new BinaryReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None, 1024));
+            try
+            {
+                _sr = new StreamReader(path);
+
+                StringBuilder sb = new StringBuilder();
+                string? line = string.Empty;
+                while ((line = _sr.ReadLine()) != null)
+                    sb.AppendLine(line);
+
+                yield return sb.ToString();
+                sb.Clear();
+            }
+            finally
+            {
+                CloseStreamReader();
+            }
         }
 
-        public void Dispose()
+        public static void CloseBinaryReader() // вызывается из HexViewModel при переключении на другой файл
         {
-            _br.Dispose();
+            if(_br != null)
+                _br.Close();
+        }
+        public static void CloseStreamReader() // вызывается из TextViewModel при переключении на другой файл
+        {
+            if (_sr != null)
+                _sr.Close();
         }
     }
 }

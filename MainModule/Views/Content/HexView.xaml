@@ -4,22 +4,30 @@
              xmlns:prism="http://prismlibrary.com/" 
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              prism:ViewModelLocator.AutoWireViewModel="True">
+
     <Grid>
-        <!--<ScrollViewer Background="White">-->
-            <TextBox Text="{Binding Text}" FontFamily="Courier New" IsReadOnly="True"></TextBox>
-            <!--<RichTextBox FontFamily="Courier New">
-                <FlowDocument PageHeight="180">
-                    <Paragraph>
-                        <Run Text="{Binding Text, Mode=TwoWay}"/>
-                    </Paragraph>
-                </FlowDocument>
-            </RichTextBox>-->
-            
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="MouseWheel">
-                    <prism:InvokeCommandAction Command="{Binding ScrollChanged}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        <!--</ScrollViewer>-->
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Content="{Binding Header}" FontFamily="Courier New"></Label>
+        
+        <RichTextBox Grid.Row="1" FontFamily="Courier New" Background="White" VerticalScrollBarVisibility="Visible">
+            <FlowDocument PageHeight="180">
+                <Paragraph>
+                    <Run Text="{Binding Text, Mode=TwoWay}"/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+        
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseWheel">
+                <prism:InvokeCommandAction Command="{Binding ScrollChanged}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        
     </Grid>
 </UserControl>
