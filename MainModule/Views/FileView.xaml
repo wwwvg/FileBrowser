@@ -5,9 +5,8 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
              xmlns:local="clr-namespace:MainModule.Helpers"
              prism:ViewModelLocator.AutoWireViewModel="True">
-    
+
     <Grid>
-        
         <!--ОТОБРАЖЕНИЕ КАТАЛОГОВ И ФАЙЛОВ-->
         <Grid.InputBindings>
             <KeyBinding Gesture="Enter" Command="{Binding DoubleClicked}" />
@@ -50,7 +49,6 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </local:ListView>
-
     </Grid>
 </UserControl>
 

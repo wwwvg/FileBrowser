@@ -24,6 +24,10 @@ namespace MainModule.ViewModels
         /// </summary>
         #region СВОЙСТВА
 
+        IEventAggregator _eventAggregator;
+
+        IRegionManager _regionManager;
+
         private bool _isError = false; // для своевременного удаления сообщения об ошибке
 
         private FileInfoModel _selectedFile;    // выбранный файл или каталог            Icon(ImageSource) | Type(enum) | FullPath | Name | Type | Size | TimeCreated
@@ -62,9 +66,6 @@ namespace MainModule.ViewModels
             get { return _args; }
             set { SetProperty(ref _args, value); }
         }
-
-        IEventAggregator _eventAggregator;                  // IEventAggregator - предназначен для отправки сообщений
-        IRegionManager _regionManager;
         #endregion
 
         #region КОМАНДЫ  
@@ -75,24 +76,25 @@ namespace MainModule.ViewModels
         public DelegateCommand SelectedCommandListView =>
             _selectedCommandListView ?? (_selectedCommandListView = new DelegateCommand(ExecuteSelectedCommandListView));
 
-        void ExecuteSelectedCommandListView()
+        private void ExecuteSelectedCommandListView()
         {
-            if (SelectedFile != null) // посылаем событие изменения выбора файла или каталога -> подписчик ->  << StatusBarViewModel >>
+            if (SelectedFile != null) 
             {
-                _eventAggregator.GetEvent<ListViewSelectionChanged>().Publish(SelectedFile);
+                _eventAggregator.GetEvent<ListViewSelectionChanged>().Publish(SelectedFile);// посылаем событие изменения выбора файла или каталога ->
+                                                                                            // подписчики ->  << StatusBarViewModel >> и << ToolBarViewModel >>
             }
             if(_isError == false)
                 _eventAggregator.GetEvent<Error>().Publish(""); // очистить информацию об ошибке
         }
         #endregion
 
-        #region ДВОЙНОЙ ЩЕЛЧОК
+        #region ДВОЙНОЙ ЩЕЛЧОК ИЛИ ENTER
 
         DelegateCommand _doubleClicked;
         public DelegateCommand DoubleClicked =>
             _doubleClicked ?? (_doubleClicked = new DelegateCommand(ExecuteDoubleClicked));
 
-        void ExecuteDoubleClicked()
+        private void ExecuteDoubleClicked()
         {
             if (SelectedFile == null) 
                 return;
@@ -103,13 +105,13 @@ namespace MainModule.ViewModels
             switch (SelectedFile.Type)
             {
                 case FileType.Back:
-                    SetFoldersAndFiles(SelectedFile.FullPath);
-                    SelectedIndex = _previousSelectedIndexes.Pop();
+                    SetFoldersAndFiles(SelectedFile.FullPath); // обновить список файлов
+                    SelectedIndex = _previousSelectedIndexes.Pop(); // взять мз стека и установить индекс родительской папки
                     _eventAggregator.GetEvent<Error>().Publish(""); // очистить информацию об ошибке
                     break;
                 case FileType.Folder:
-                    _previousSelectedIndexes.Push(SelectedIndex);
-                    SetFoldersAndFiles(SelectedFile.FullPath);
+                    _previousSelectedIndexes.Push(SelectedIndex);  // поместить в стек индекс папки, с которой осуществляется заход
+                    SetFoldersAndFiles(SelectedFile.FullPath);  // обновить список файлов
                     SelectedIndex = 0;
                     break;
                 case FileType.Image:
@@ -124,10 +126,9 @@ namespace MainModule.ViewModels
                 default:
                     break;
             }
-
         }
 
-        private void Callback(NavigationResult result)
+        private void Callback(NavigationResult result)  // не используется
         {
             if (result.Error != null)
             {
@@ -138,7 +139,7 @@ namespace MainModule.ViewModels
 
         #endregion
 
-        void SetFoldersAndFiles(string path) // добавление папок и файлов
+        private void SetFoldersAndFiles(string path) // добавление папок и файлов
         {
             Files.Clear();
             DirectoryInfo dir = new DirectoryInfo($"{path}");
@@ -185,7 +186,7 @@ namespace MainModule.ViewModels
             } 
         }
 
-        private void Refresh()
+        private void Refresh()   // обновление списка файлов и каталогов
         {
             SetFoldersAndFiles(_currentDirectory);
         }

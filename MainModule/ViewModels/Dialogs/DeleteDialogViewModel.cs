@@ -11,6 +11,7 @@ namespace PrismDemo.Dialogs
 {
     public class DeleteDialogViewModel : BindableBase, IDialogAware
     {
+        #region СВОЙСТВА
         IEventAggregator _eventAggregator;
         public string Title => "File Browser";
 
@@ -34,7 +35,9 @@ namespace PrismDemo.Dialogs
             get { return _message; }
             set { SetProperty(ref _message, value); }
         }
+        #endregion
 
+        #region КОМАНДЫ УДАЛЕНИЯ И ОТМЕНЫ
         public DelegateCommand CancelCommand { get; }
         public DelegateCommand DeleteCommand { get; }
 
@@ -44,10 +47,10 @@ namespace PrismDemo.Dialogs
         {
             var buttonResult = ButtonResult.Yes;
             var parameters = new DialogParameters();
-            parameters.Add("MoveToRecycleBin", MoveToRecycleBin);
+            parameters.Add("MoveToRecycleBin", MoveToRecycleBin);  // информация (bool) о том, что следует ли файл/каталог помещать в корзину или убить сразу
             try
             {
-                RequestClose?.Invoke(new DialogResult(buttonResult, parameters));
+                RequestClose?.Invoke(new DialogResult(buttonResult, parameters)); // возврат из диалога с информацией о нажатой кнопке и доп. информации (см. выше)
             }
             catch (Exception ex)
             {
@@ -83,12 +86,15 @@ namespace PrismDemo.Dialogs
         {
             Message = $"Вы уверены, что хотите удалить выбранный элемент {parameters.GetValue<string>("message")}?";
         }
+        #endregion
 
+        #region КОНСТРУКТОР
         public DeleteDialogViewModel(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
             CancelCommand = new DelegateCommand(CloseDialog);
             DeleteCommand = new DelegateCommand(CloseDialogAndDelete);
         }
+        #endregion
     }
 }

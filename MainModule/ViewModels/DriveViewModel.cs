@@ -12,8 +12,15 @@ using System.Windows.Media.Imaging;
 
 namespace MainModule.ViewModels
 {
+    /// <summary>
+    /// Выбор логического диска и отображение доступной памяти
+    /// </summary>
+    
     public class DriveViewModel : BindableBase
     {
+        #region СВОЙСТВА
+        IEventAggregator _eventAggregator;
+
         private DriveModel _selectedDrive;                  // выбранный диск           Name | Icon(ImageSource) | FreeSpace
         public DriveModel SelectedDrive
         {
@@ -34,6 +41,7 @@ namespace MainModule.ViewModels
             get => _freeSpace;
             set => SetProperty(ref _freeSpace, value);
         }
+        #endregion
 
         #region КОМАНДА ВЫБОРА ЛОГИЧЕСКОГО ДИСКА
 
@@ -54,7 +62,7 @@ namespace MainModule.ViewModels
         }
         #endregion
 
-        IEventAggregator _eventAggregator;
+        #region КОНСТРУКТОР
         public DriveViewModel(IEventAggregator eventAggregator)
         {
             try
@@ -86,5 +94,6 @@ namespace MainModule.ViewModels
                 _eventAggregator.GetEvent<Error>().Publish(ex.Message);
             }
         }
+        #endregion
     }
 }

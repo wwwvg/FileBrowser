@@ -21,10 +21,6 @@ namespace MainModule.ViewModels
             get { return _message; }
             set { SetProperty(ref _message, value); }
         }
-        public ErrorViewModel(IEventAggregator eventAggregator)
-        {
-            eventAggregator.GetEvent<Error>().Subscribe(SetMessage);
-        }
 
         private void SetMessage(string message)
         {
@@ -33,6 +29,10 @@ namespace MainModule.ViewModels
                 Image = new BitmapImage(new Uri("..\\Icons\\warning.png", UriKind.Relative));
             else
                 Image = null;
+        }
+        public ErrorViewModel(IEventAggregator eventAggregator)
+        {
+            eventAggregator.GetEvent<Error>().Subscribe(SetMessage); // подписка на получение уведомлений об ошибках
         }
     }
 }

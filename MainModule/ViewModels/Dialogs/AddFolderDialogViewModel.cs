@@ -11,6 +11,7 @@ namespace PrismDemo.Dialogs
 {
     public class AddFolderDialogViewModel : BindableBase, IDialogAware
     {
+        #region СВОЙСТВА
         IEventAggregator _eventAggregator;  // для отправки сообщений об ошибках
         public string Title => "File Browser";
 
@@ -27,7 +28,9 @@ namespace PrismDemo.Dialogs
             get { return _newFolderName; }
             set { SetProperty(ref _newFolderName, value); }
         }
+        #endregion
 
+        #region КОМАНДЫ ДОБАВЛЕНИЯ КАТАЛОГА, ОТМЕНЫ И СООТВЕТСВУЮЩИЕ ОБРАБОТЧИКИ
         public DelegateCommand CancelCommand { get; }
         public DelegateCommand AddCommand { get; }
 
@@ -77,12 +80,15 @@ namespace PrismDemo.Dialogs
         {
             Message = $"Создать новый каталог (папку):";
         }
+        #endregion
 
+        #region КОНСТРУКТОР
         public AddFolderDialogViewModel(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
             CancelCommand = new DelegateCommand(CloseDialog);
             AddCommand = new DelegateCommand(CloseDialogAndCreateFolder);
         }
+        #endregion
     }
 }

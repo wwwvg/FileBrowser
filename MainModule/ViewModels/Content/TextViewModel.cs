@@ -16,16 +16,19 @@ namespace MainModule.ViewModels.Content
 {
     public class TextViewModel : BindableBase, INavigationAware
     {
+        #region СВОЙСТВА
         private IEventAggregator _eventAggregator;
-        private IRegionManager _regionManager;
         private FileInfoModel _fileInfoModel;
+
         private string _text;
         public string Text
         {
             get { return _text; }
             set { SetProperty(ref _text, value); }
         }
+        #endregion
 
+        #region РЕАЛИЗАЦИЯ ИНТЕРФЕЙСА НАВИГАЦИИ (INavigationAware)
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return true;
@@ -44,8 +47,10 @@ namespace MainModule.ViewModels.Content
                 SetText();
             }
         }
+        #endregion
 
-        void SetText()                                   
+        #region ВЫВОД ТЕКСТА НА ЭКРАН
+        void SetText()                       
         {
             StringBuilder text = new StringBuilder();
             try
@@ -81,12 +86,13 @@ namespace MainModule.ViewModels.Content
         //    }
         //    Text = text;
         //}
+        #endregion
 
-
-        public TextViewModel(IEventAggregator eventAggregator, IRegionManager regionManager)
+        #region КОНСТРУКТОР
+        public TextViewModel(IEventAggregator eventAggregator)
         {
-            _regionManager = regionManager;
             _eventAggregator = eventAggregator;
         }
+        #endregion
     }
 }

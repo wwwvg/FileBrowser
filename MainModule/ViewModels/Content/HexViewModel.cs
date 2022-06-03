@@ -15,6 +15,7 @@ namespace MainModule.ViewModels.Content
 {
     public class HexViewModel : BindableBase, INavigationAware
     {
+        #region СВОЙСТВА
         private FileInfoModel _fileInfoModel;
 
         IEventAggregator _eventAggregator; // будет посылать сообщения об ошибках
@@ -27,7 +28,9 @@ namespace MainModule.ViewModels.Content
             get { return _text; }
             set { SetProperty(ref _text, value); }
         }
+        #endregion
 
+        #region КОМАНДА СКРОЛЛА - ПОКА НЕ ИСПОЛЬЗУЕТСЯ
         private DelegateCommand _scrollChanged;
         public DelegateCommand ScrollChanged =>
             _scrollChanged ?? (_scrollChanged = new DelegateCommand(ExecuteScrollChanged));
@@ -36,7 +39,9 @@ namespace MainModule.ViewModels.Content
         {
             int i = 0;
         }
+        #endregion
 
+        #region РЕАЛИЗАЦИЯ ИНТЕРФЕЙСА НАВИГАЦИИ (INavigationAware)
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
             return true;
@@ -52,11 +57,13 @@ namespace MainModule.ViewModels.Content
             if (navigationContext.Parameters.ContainsKey("FileInfoModel"))
             {
                 _fileInfoModel = navigationContext.Parameters.GetValue<FileInfoModel>("FileInfoModel");
-                _bufferPos = 0;
+                //_bufferPos = 0;
                 SetText();
             }
         }
+        #endregion
 
+        #region ВЫВОД ТЕКСТА В НЕХ ФОРМАТЕ НА ЭКРАН
         void SetText()
         {
             StringBuilder text = new StringBuilder();
@@ -101,21 +108,25 @@ namespace MainModule.ViewModels.Content
         }
 
 
-        async Task SetTextAsync()
-        {
-            // асинхронное чтение
-            using (StreamReader reader = new StreamReader(_fileInfoModel.FullPath))
-            {
-                string? line;
-                while ((line = await reader.ReadLineAsync()) != null)
-                {
-                    Text += line + "\n";
-                }
-            }
-        }
+        //async Task SetTextAsync()
+        //{
+        //    // асинхронное чтение
+        //    using (StreamReader reader = new StreamReader(_fileInfoModel.FullPath))
+        //    {
+        //        string? line;
+        //        while ((line = await reader.ReadLineAsync()) != null)
+        //        {
+        //            Text += line + "\n";
+        //        }
+        //    }
+        //}
+        #endregion
+
+        #region КОНСТРУКТОР
         public HexViewModel(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
         }
+        #endregion
     }
 }

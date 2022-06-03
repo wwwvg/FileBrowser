@@ -7,11 +7,15 @@ using System.Windows;
 
 namespace MainModule.Helpers
 {
-    public class ListView : System.Windows.Controls.ListView
+    public class ListView : System.Windows.Controls.ListView  // переопределяется ListView для корректного выставления фокуса
     {
+        // используется в FileView.xaml, как:
+        // xmlns:local="clr-namespace:MainModule.Helpers"
+        // ...
+        //<local:ListView ItemsSource="{Binding Files}" Grid.Row="1" Margin="5"
         protected override DependencyObject GetContainerForItemOverride()
         {
-            return new ListViewItem();
+            return new ListViewItem();  // ListViewItem - также переопределяется (собственно там вся логика). Файл ListView.cs
         }
     }
 }

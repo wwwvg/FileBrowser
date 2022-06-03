@@ -18,6 +18,7 @@ namespace MainModule.ViewModels
     public class ToolBarViewModel : BindableBase
     {
         /// <summary>
+        /// Содержит команды создания новой папки, удаления папок или файлов и принудительного обновления содержимого
         /// FileViewModel посылает сообщение об изменении выбранного файла/каталога. Проверяется их путь и на основании этого определяется доступность кнопок.
         /// </summary>
         #region СВОЙСТВА
@@ -95,7 +96,7 @@ namespace MainModule.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        _eventAggregator.GetEvent<Error>().Publish(ex.Message);
+                        _eventAggregator.GetEvent<Error>().Publish(ex.Message); //==========> сообщение ErrorViewModel если не удается удалить
                     }
                 }
             });
@@ -130,19 +131,6 @@ namespace MainModule.ViewModels
             _fileInfoModel = fileInfoModel;
             CanDeleteItem = true;
         }
-        #endregion
-
-        #region ОБНОВИТЬ
-        private DelegateCommand _refresh;
-        public DelegateCommand Refresh =>
-            _refresh ?? (_refresh = new DelegateCommand(ExecuteRefresh));
-
-        void ExecuteRefresh()
-        {
-            _eventAggregator.GetEvent<RefreshRequested>().Publish();
-        }
-        #endregion
-        #endregion
         private void ShowDeleteDialog()
         {
             _dialogService.ShowDeleteDialog(_fileInfoModel?.FullPath, r =>
@@ -152,7 +140,7 @@ namespace MainModule.ViewModels
                     try
                     {
                         bool moveToRecycleBin = r.Parameters.GetValue<bool>("MoveToRecycleBin");
-                        if(moveToRecycleBin)
+                        if (moveToRecycleBin) // переместить в корзину или удалить навсегда
                         {
                             if (_fileInfoModel.Type == Helpers.FileType.Folder)
                                 FileSystem.DeleteDirectory(_fileInfoModel.FullPath, UIOption.OnlyErrorDialogs, RecycleOption.SendToRecycleBin);
@@ -170,16 +158,30 @@ namespace MainModule.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        _eventAggregator.GetEvent<Error>().Publish(ex.Message);
+                        _eventAggregator.GetEvent<Error>().Publish(ex.Message); //==========> сообщение ErrorViewModel если не удается удалить
                     }
                 }
             });
         }
+        #endregion
+
+        #region ОБНОВИТЬ
+        private DelegateCommand _refresh;
+        public DelegateCommand Refresh =>
+            _refresh ?? (_refresh = new DelegateCommand(ExecuteRefresh));
+
+        void ExecuteRefresh()
+        {
+            _eventAggregator.GetEvent<RefreshRequested>().Publish();
+        }
+        #endregion
+        #endregion
+        
         public ToolBarViewModel(IEventAggregator eventAggregator, IDialogService dialogService)
         {
             _eventAggregator = eventAggregator;
-            _canDeleteItem = false; // кнопки не доступны сначала
-            _canAddFolder = true; // кнопки не доступны сначала
+            _canDeleteItem = false;
+            _canAddFolder = true; 
             DeleteItemImage = new BitmapImage(new Uri("..\\Icons\\DeleteItem.png", UriKind.Relative));
             AddFolderImage = new BitmapImage(new Uri("..\\Icons\\AddFolder.png", UriKind.Relative));
             RefreshImage = new BitmapImage(new Uri("..\\Icons\\Refresh.png", UriKind.Relative));

@@ -14,6 +14,7 @@ namespace MainModule.ViewModels.Content
 {
     public class ImageViewModel : BindableBase, INavigationAware
     {
+        #region СВОЙСТВА
         private FileInfoModel _fileInfoModel;
 
         private IEventAggregator _eventAggregator;
@@ -24,7 +25,9 @@ namespace MainModule.ViewModels.Content
             get { return _image; }
             set { SetProperty(ref _image, value); }
         }
+        #endregion
 
+        #region РЕАЛИЗАЦИЯ ИНТЕРФЕЙСА НАВИГАЦИИ (INavigationAware)
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             if (navigationContext.Parameters.ContainsKey("FileInfoModel"))
@@ -43,7 +46,9 @@ namespace MainModule.ViewModels.Content
         {
             
         }
+        #endregion
 
+        #region ВЫВОД КАРТИНКИ НА ЭКРАН
         void SetImage()
         {
             try
@@ -55,10 +60,13 @@ namespace MainModule.ViewModels.Content
                 _eventAggregator.GetEvent<Error>().Publish(ex.Message);
             }
         }
+        #endregion
 
+        #region КОНСТРУКТОР
         public ImageViewModel(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
         }
+        #endregion
     }
 }

@@ -30,7 +30,6 @@ namespace MainModule
             containerRegistry.RegisterForNavigation<ImageView>();
             containerRegistry.RegisterForNavigation<HexView>();
             containerRegistry.RegisterForNavigation<TextView>();
-            containerRegistry.RegisterSingleton<FileViewModel>();
         }
     }
 }

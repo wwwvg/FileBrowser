@@ -8,8 +8,6 @@
         <Style TargetType="Window">
             <Setter Property="Height" Value="150" />
             <Setter Property="Width" Value="390"/>
-            <Setter Property="Icon" Value="{Binding Icon}"/>
-
         </Style>
     </prism:Dialog.WindowStyle>
     
@@ -22,20 +20,19 @@
         <TextBlock Text="{Binding Message}" HorizontalAlignment="Center"  Grid.Row="0" Margin="0,20,0,0" TextWrapping="Wrap" />
 
         <Grid Grid.Row="1">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width ="auto"></ColumnDefinition>
-            <ColumnDefinition Width ="auto"></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <CheckBox Grid.Column="0" IsChecked="{Binding MoveToRecycleBin}" VerticalAlignment="Center"></CheckBox>
-        <Label Grid.Column="1" Content="{Binding TextRecycleBin}" HorizontalAlignment="left" VerticalAlignment="Center"></Label>
-        <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
-            <Button Command="{Binding DeleteCommand}" 
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width ="auto"></ColumnDefinition>
+                <ColumnDefinition Width ="auto"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <CheckBox Grid.Column="0" IsChecked="{Binding MoveToRecycleBin}" VerticalAlignment="Center"></CheckBox>
+            <Label Grid.Column="1" Content="{Binding TextRecycleBin}" HorizontalAlignment="left" VerticalAlignment="Center"></Label>
+            <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
+                <Button Command="{Binding DeleteCommand}" 
                     Content="Да" Width="75" Height="25"/>
-            <Button Command="{Binding CancelCommand}" 
+                <Button Command="{Binding CancelCommand}" 
                     Content="Отмена" Width="75" Height="25" IsDefault="True" Margin="5,0,0,0"/>
-        </StackPanel>
+            </StackPanel>
         </Grid>
-        
     </Grid>
 </UserControl>
