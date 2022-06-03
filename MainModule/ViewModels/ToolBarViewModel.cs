@@ -180,7 +180,7 @@ namespace MainModule.ViewModels
         public ToolBarViewModel(IEventAggregator eventAggregator, IDialogService dialogService)
         {
             _eventAggregator = eventAggregator;
-            _canDeleteItem = false;
+            _canDeleteItem = true;
             _canAddFolder = true; 
             DeleteItemImage = new BitmapImage(new Uri("..\\Icons\\DeleteItem.png", UriKind.Relative));
             AddFolderImage = new BitmapImage(new Uri("..\\Icons\\AddFolder.png", UriKind.Relative));

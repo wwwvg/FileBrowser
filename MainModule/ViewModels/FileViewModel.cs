@@ -178,6 +178,7 @@ namespace MainModule.ViewModels
                     Files.Add(new FileInfoModel { Icon = imageSource, Type = type, FullPath = item.FullName, Name = item.Name, Size = Bytes.SizeSuffix(item.Length), TimeCreated = item.LastWriteTime.ToString("dd/MM/yyyy  hh:mm") });
                 }
             }
+
             catch (Exception ex) // некоторые системные папки и файлы недоступны, но если запустить программу с админскими привилегиями то все ОК.
             {
                 _isError = true;
@@ -186,9 +187,18 @@ namespace MainModule.ViewModels
             } 
         }
 
+        private void OnDiskChanged(string path)
+        {
+            SetFoldersAndFiles(path);
+            if (Files.Count != 0)
+                SelectedIndex = 0;
+        }
+
         private void Refresh()   // обновление списка файлов и каталогов
         {
             SetFoldersAndFiles(_currentDirectory);
+            if (Files.Count != 0)
+                SelectedIndex = 0;
         }
 
         #region КОНСТРУКТОР
@@ -196,7 +206,7 @@ namespace MainModule.ViewModels
         {
             _regionManager = regionManager;
             _eventAggregator = eventAggregator;
-            _eventAggregator.GetEvent<DriveChanged>().Subscribe(SetFoldersAndFiles);  // диск или файл/каталог изменился -> пришло от << DriveViewModel >>
+            _eventAggregator.GetEvent<DriveChanged>().Subscribe(OnDiskChanged);  // диск или файл/каталог изменился -> пришло от << DriveViewModel >>
             _eventAggregator.GetEvent<RefreshRequested>().Subscribe(Refresh);  // нажата кнопка обновить на тулбаре -> пришло от << ToolBarViewModel >> 
         }
         #endregion

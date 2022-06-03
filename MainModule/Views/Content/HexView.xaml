@@ -14,8 +14,8 @@
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0" Content="{Binding Header}" FontFamily="Courier New"></Label>
-        
-        <RichTextBox Grid.Row="1" FontFamily="Courier New" Background="White" VerticalScrollBarVisibility="Visible">
+
+        <RichTextBox Grid.Row="1" FontFamily="Courier New" Background="White" IsReadOnly="True" VerticalScrollBarVisibility="Visible">
             <FlowDocument PageHeight="180">
                 <Paragraph>
                     <Run Text="{Binding Text, Mode=TwoWay}"/>

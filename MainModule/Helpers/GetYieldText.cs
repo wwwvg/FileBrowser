@@ -51,7 +51,7 @@ namespace MainModule.Helpers
         {
             try
             {
-                _sr = new StreamReader(path);
+                _sr = new StreamReader(path, true);
 
                 StringBuilder sb = new StringBuilder();
                 string? line = string.Empty;
