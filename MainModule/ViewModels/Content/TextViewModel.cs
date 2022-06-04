@@ -26,7 +26,7 @@ namespace MainModule.ViewModels.Content
         }
         #endregion
 
-        #region КОМАНДА СКРОЛЛА
+        #region КОМАНДА MouseWheel
         private DelegateCommand _scrollChanged;
         public DelegateCommand ScrollChanged =>
             _scrollChanged ?? (_scrollChanged = new DelegateCommand(ExecuteScrollChanged));
@@ -73,7 +73,7 @@ namespace MainModule.ViewModels.Content
                         if (count++ > 100)
                             break;
                     }
-                    Text = sb.ToString();  // устанавливаюся первые 100 строк
+                    Text = sb.ToString();  // устанавливаются первые 100 строк
                 }
                 catch (Exception ex)
                 {
