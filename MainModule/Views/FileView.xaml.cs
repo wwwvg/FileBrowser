@@ -11,5 +11,12 @@ namespace MainModule.Views
         {
             InitializeComponent();
         }
+
+        private void ListView_PreviewMouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            //if (e.Source is ListView)
+            //    return;
+            //e.Handled = true;
+        }
     }
 }

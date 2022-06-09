@@ -22,6 +22,15 @@ namespace MainModule.ViewModels
         /// <summary>
         /// FileViewModel -> отображает ComboBox с выбранным диском и ListView со списком файлов и папок.
         /// </summary>
+
+        public FileViewModel(IEventAggregator eventAggregator, IRegionManager regionManager)
+        {
+            _regionManager = regionManager;
+            _eventAggregator = eventAggregator;
+            _eventAggregator.GetEvent<DriveChanged>().Subscribe(OnDiskChanged);  // диск или файл/каталог изменился -> пришло от << DriveViewModel >>
+            _eventAggregator.GetEvent<RefreshRequested>().Subscribe(Refresh);  // нажата кнопка обновить на тулбаре -> пришло от << ToolBarViewModel >> 
+        }
+
         #region СВОЙСТВА
 
         IEventAggregator _eventAggregator;
@@ -66,6 +75,13 @@ namespace MainModule.ViewModels
             get { return _args; }
             set { SetProperty(ref _args, value); }
         }
+
+        private string _nameOfSelectedItem;
+        public string NameOfSelectedItem
+        {
+            get { return _nameOfSelectedItem; }
+            set { SetProperty(ref _nameOfSelectedItem, value); }
+        }
         #endregion
 
         #region КОМАНДЫ  
@@ -96,6 +112,7 @@ namespace MainModule.ViewModels
 
         private void ExecuteDoubleClicked()
         {
+            string s = NameOfSelectedItem;
             if (SelectedFile == null) 
                 return;
 
@@ -196,19 +213,14 @@ namespace MainModule.ViewModels
 
         private void Refresh()   // обновление списка файлов и каталогов
         {
+            int selectedIndex = SelectedIndex;
             SetFoldersAndFiles(_currentDirectory);
-            if (Files.Count != 0)
+            if (Files.Count > 0)
                 SelectedIndex = 0;
+            else if (selectedIndex < Files.Count)
+            {
+                SelectedIndex = selectedIndex;
+            }
         }
-
-        #region КОНСТРУКТОР
-        public FileViewModel(IEventAggregator eventAggregator, IRegionManager regionManager)
-        {
-            _regionManager = regionManager;
-            _eventAggregator = eventAggregator;
-            _eventAggregator.GetEvent<DriveChanged>().Subscribe(OnDiskChanged);  // диск или файл/каталог изменился -> пришло от << DriveViewModel >>
-            _eventAggregator.GetEvent<RefreshRequested>().Subscribe(Refresh);  // нажата кнопка обновить на тулбаре -> пришло от << ToolBarViewModel >> 
-        }
-        #endregion
     }
 }

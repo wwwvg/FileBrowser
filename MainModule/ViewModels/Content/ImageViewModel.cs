@@ -7,6 +7,7 @@ using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -14,16 +15,27 @@ namespace MainModule.ViewModels.Content
 {
     public class ImageViewModel : BindableBase, INavigationAware
     {
+        public ImageViewModel(IEventAggregator eventAggregator)
+        {
+            _eventAggregator = eventAggregator;
+            _eventAggregator.GetEvent<RefreshRequested>().Subscribe(OnDeleted);
+        }
+
+        private void OnDeleted()
+        {
+            Picture = null;
+        }
+
         #region СВОЙСТВА
         private FileInfoModel _fileInfoModel;
 
         private IEventAggregator _eventAggregator;
 
-        private ImageSource _image;
-        public ImageSource Image
+        private ImageSource _picture;
+        public ImageSource Picture
         {
-            get { return _image; }
-            set { SetProperty(ref _image, value); }
+            get { return _picture; }
+            set { SetProperty(ref _picture, value); }
         }
         #endregion
 
@@ -53,19 +65,21 @@ namespace MainModule.ViewModels.Content
         {
             try
             {
-                Image = new BitmapImage(new Uri(_fileInfoModel.FullPath, UriKind.Absolute));
+                BitmapImage bi = new BitmapImage();
+                bi.BeginInit();
+                bi.CacheOption = BitmapCacheOption.OnLoad;
+                bi.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+                bi.UriSource = new Uri(_fileInfoModel.FullPath, UriKind.Absolute);
+                bi.EndInit();
+
+                Picture = bi;
+
+               // Image = new BitmapImage(new Uri(_fileInfoModel.FullPath, UriKind.Absolute));
             }
             catch(Exception ex)
             {
                 _eventAggregator.GetEvent<Error>().Publish(ex.Message);
             }
-        }
-        #endregion
-
-        #region КОНСТРУКТОР
-        public ImageViewModel(IEventAggregator eventAggregator)
-        {
-            _eventAggregator = eventAggregator;
         }
         #endregion
     }

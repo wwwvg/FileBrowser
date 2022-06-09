@@ -21,6 +21,19 @@ namespace MainModule.ViewModels
         /// Содержит команды создания новой папки, удаления папок или файлов и принудительного обновления содержимого
         /// FileViewModel посылает сообщение об изменении выбранного файла/каталога. Проверяется их путь и на основании этого определяется доступность кнопок.
         /// </summary>
+        public ToolBarViewModel(IEventAggregator eventAggregator, IDialogService dialogService)
+        {
+            _eventAggregator = eventAggregator;
+            _canDeleteItem = true;
+            _canAddFolder = true;
+            DeleteItemImage = new BitmapImage(new Uri("..\\Icons\\DeleteItem.png", UriKind.Relative));
+            AddFolderImage = new BitmapImage(new Uri("..\\Icons\\AddFolder.png", UriKind.Relative));
+            RefreshImage = new BitmapImage(new Uri("..\\Icons\\Refresh.png", UriKind.Relative));
+            eventAggregator.GetEvent<CurrentDirectoryChanged>().Subscribe(ChangeCanExecuteAddFolder);  // диск или файл/каталог изменился -> пришло от << FileViewModel >>
+            eventAggregator.GetEvent<ListViewSelectionChanged>().Subscribe(ChangeCanExecuteDeleteItem);  // диск или файл/каталог изменился -> пришло от << FileViewModel >>
+            _dialogService = dialogService;
+        }
+
         #region СВОЙСТВА
 
         private FileInfoModel _fileInfoModel;
@@ -155,6 +168,7 @@ namespace MainModule.ViewModels
                                 File.Delete(_fileInfoModel.FullPath);
                         }
                         _eventAggregator.GetEvent<RefreshRequested>().Publish();   //==========> сообщение FileViewModel на обновление списка файлов
+                       
                     }
                     catch (Exception ex)
                     {
@@ -176,18 +190,5 @@ namespace MainModule.ViewModels
         }
         #endregion
         #endregion
-        
-        public ToolBarViewModel(IEventAggregator eventAggregator, IDialogService dialogService)
-        {
-            _eventAggregator = eventAggregator;
-            _canDeleteItem = true;
-            _canAddFolder = true; 
-            DeleteItemImage = new BitmapImage(new Uri("..\\Icons\\DeleteItem.png", UriKind.Relative));
-            AddFolderImage = new BitmapImage(new Uri("..\\Icons\\AddFolder.png", UriKind.Relative));
-            RefreshImage = new BitmapImage(new Uri("..\\Icons\\Refresh.png", UriKind.Relative));
-            eventAggregator.GetEvent<CurrentDirectoryChanged>().Subscribe(ChangeCanExecuteAddFolder);  // диск или файл/каталог изменился -> пришло от << FileViewModel >>
-            eventAggregator.GetEvent<ListViewSelectionChanged>().Subscribe(ChangeCanExecuteDeleteItem);  // диск или файл/каталог изменился -> пришло от << FileViewModel >>
-            _dialogService = dialogService;
-        }
     }
 }

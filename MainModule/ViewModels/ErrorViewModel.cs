@@ -8,6 +8,11 @@ namespace MainModule.ViewModels
 {
     public class ErrorViewModel : BindableBase 
     {
+        public ErrorViewModel(IEventAggregator eventAggregator)
+        {
+            eventAggregator.GetEvent<Error>().Subscribe(SetMessage); // подписка на получение уведомлений об ошибках
+        }
+
         private BitmapImage _image;
         public BitmapImage Image
         {
@@ -29,10 +34,6 @@ namespace MainModule.ViewModels
                 Image = new BitmapImage(new Uri("..\\Icons\\warning.png", UriKind.Relative));
             else
                 Image = null;
-        }
-        public ErrorViewModel(IEventAggregator eventAggregator)
-        {
-            eventAggregator.GetEvent<Error>().Subscribe(SetMessage); // подписка на получение уведомлений об ошибках
         }
     }
 }

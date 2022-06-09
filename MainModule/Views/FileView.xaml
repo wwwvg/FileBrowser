@@ -6,11 +6,21 @@
              xmlns:local="clr-namespace:MainModule.Helpers"
              prism:ViewModelLocator.AutoWireViewModel="True">
 
+    <UserControl.Resources>
+        <Style x:Key="ListViewStyle" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Background" Value="Black" />
+        </Style>
+
+        
+    </UserControl.Resources>
+    
+
     <Grid>
         <!--ОТОБРАЖЕНИЕ КАТАЛОГОВ И ФАЙЛОВ-->
         <Grid.InputBindings>
-            <KeyBinding Gesture="Enter" Command="{Binding DoubleClicked}" />
+            <KeyBinding Gesture="Enter" Command="{Binding DoubleClicked}"/>
         </Grid.InputBindings>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="20"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
@@ -18,10 +28,11 @@
         <!--ТЕКУЩАЯ ДИРЕКТОРИЯ-->
         <TextBlock Text="{Binding CurrentDirectory}" VerticalAlignment="Center" Margin="5 0 0 0"></TextBlock>
         <!--СПИСОК ФАЙЛОВ-->
-        <local:ListView ItemsSource="{Binding Files}" Grid.Row="1" Margin="5"
+        <local:ListView ItemsSource="{Binding Files}" Grid.Row="1" Margin="5" PreviewMouseDoubleClick="ListView_PreviewMouseDoubleClick"
                     SelectedItem="{Binding SelectedFile}"
                     SelectedIndex="{Binding SelectedIndex}">
             <local:ListView.View>
+
                 <GridView>
                     <GridViewColumn Header="Имя">
                         <GridViewColumn.CellTemplate>
@@ -38,6 +49,7 @@
                 </GridView>
             </local:ListView.View>
 
+
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <prism:InvokeCommandAction Command="{Binding SelectedCommandListView}"
@@ -45,9 +57,11 @@
                 </i:EventTrigger>
                 <i:EventTrigger EventName="MouseDoubleClick">
                     <prism:InvokeCommandAction Command="{Binding DoubleClicked}"
-                                                CommandParameter="{Binding SelectedFile, Mode=TwoWay}" />
+                                                CommandParameter="{Binding SelectedFile, Mode=TwoWay}"
+                                               />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
+
         </local:ListView>
     </Grid>
 </UserControl>
