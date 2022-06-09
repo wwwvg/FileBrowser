@@ -101,6 +101,28 @@ namespace MainModule.ViewModels
             }
             if(_isError == false)
                 _eventAggregator.GetEvent<Error>().Publish(""); // очистить информацию об ошибке
+
+            string s = NameOfSelectedItem;
+            if (SelectedFile == null)
+                return;
+
+            var parameters = new NavigationParameters();
+            parameters.Add("FileInfoModel", SelectedFile);
+
+            switch (SelectedFile.Type)
+            {
+                case FileType.Image:
+                    _regionManager.RequestNavigate("ContentRegion", "ImageView", Callback, parameters);
+                    break;
+                case FileType.Text:
+                    _regionManager.RequestNavigate("ContentRegion", "TextView", Callback, parameters);
+                    break;
+                case FileType.Bin:
+                    _regionManager.RequestNavigate("ContentRegion", "HexView", Callback, parameters);
+                    break;
+                default:
+                    break;
+            }
         }
         #endregion
 
@@ -130,15 +152,6 @@ namespace MainModule.ViewModels
                     _previousSelectedIndexes.Push(SelectedIndex);  // поместить в стек индекс папки, с которой осуществляется заход
                     SetFoldersAndFiles(SelectedFile.FullPath);  // обновить список файлов
                     SelectedIndex = 0;
-                    break;
-                case FileType.Image:
-                    _regionManager.RequestNavigate("ContentRegion", "ImageView", Callback, parameters);
-                    break;
-                case FileType.Text:
-                    _regionManager.RequestNavigate("ContentRegion", "TextView", Callback, parameters);
-                    break;
-                case FileType.Bin:
-                    _regionManager.RequestNavigate("ContentRegion", "HexView", Callback, parameters);
                     break;
                 default:
                     break;
