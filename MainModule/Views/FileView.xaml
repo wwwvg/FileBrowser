@@ -49,7 +49,6 @@
                 </GridView>
             </local:ListView.View>
 
-
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <prism:InvokeCommandAction Command="{Binding SelectedCommandListView}"
